@@ -135,7 +135,7 @@ function room_analysis(e,room_no,detail_code){
 					
 				}
 				console.log(breed_data);
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="5">第一烤</th><th colspan="5">第二烤</th><th colspan="5">第三烤</th></tr><tr><th>照片</th><th>烟农</th><th>时间</th><th>品种</th><th>重量</th><th>照片</th><th>烟农</th><th>时间</th><th>品种</th><th>重量</th><th>照片</th><th>烟农</th><th>时间</th><th>品种</th><th>重量</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="4">第一烤</th><th colspan="4">第二烤</th><th colspan="4">第三烤</th></tr><tr><th>烟农</th><th>时间</th><th>品种</th><th>重量</th><th>烟农</th><th>时间</th><th>品种</th><th>重量</th><th>烟农</th><th>时间</th><th>品种</th><th>重量</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
@@ -152,9 +152,6 @@ function room_analysis(e,room_no,detail_code){
 			      columns:[
 			        {data:'[]',render:function(data,index,row){
 			        	return data[0].room_no;
-			        }},
-			        {data:'[]',render:function(){
-			        	return "<img src='#' alt='' />";
 			        }},
 			        {data:'[]',render:function(data,index,row){
 			        	if(data[0]){
@@ -184,9 +181,6 @@ function room_analysis(e,room_no,detail_code){
 			        		return " ";
 			        	}
 			        }},
-			        {data:'[]',render:function(){
-			        	return "<img src='#' alt='' />";
-			        }},
 			        {data:'[]',render:function(data,index,row){
 			        	if(data[1]){
 			        		return data[1].party_b;
@@ -214,9 +208,6 @@ function room_analysis(e,room_no,detail_code){
 			        	}else{
 			        		return " ";
 			        	}
-			        }},
-			        {data:'[]',render:function(){
-			        	return "<img src='#' alt='' />";
 			        }},
 			        {data:'[]',render:function(data,index,row){
 			        	if(data[2]){

@@ -32,12 +32,14 @@
             var url = "http://120.25.101.68:8081/stations/" + stations + "/addresses/" + addresses + "/status?startTime=" + protocolStartDate + "&endTime=" + protocolEndDate;
             //console.log(url);
             $("#searchModal").modal('toggle');
+            console.log(url)
             $.ajax({
                 type: "get",
                 url: url,
                 /*"http://120.25.101.68:8081/stations/6/addresses/00001/status?startTime=2016-6-1&endTime=2016-7-1"*/
                 dataType: 'json',
                 success: function(data) {
+                    console.log(data)
                     var opt = "<div class='col-md-12' style='height:50px;'><span>开始日期:" + protocolStartDate + "</span><span>结束日期:" + protocolEndDate + "</span></div>";
                     $(".date-info").html(opt);
                     $("#searchModal").modal('toggle');
@@ -152,6 +154,8 @@
                         }
                         if (lastdate==0)
                         {
+                          console.log(dryball);
+                          console.log(wetball);
                           lastdate=createdAt;
                           dataPoints.push({
                             type: "line",

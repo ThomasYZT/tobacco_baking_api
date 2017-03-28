@@ -179,4 +179,5 @@ class PackingDetailController < ApplicationController
 			
 		end	
 	end
+
 end

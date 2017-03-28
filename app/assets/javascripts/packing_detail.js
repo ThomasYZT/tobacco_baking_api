@@ -151,13 +151,12 @@
 
 			initChart(packing_weight, packing_sum, packing_category, packing_type, uniformity, status);
 			initTable(tTrolleys_data);
+
+
 		}
-	})
+	});
 
-	
-  	
 })()
-
 function room_analysis(e,room_no,detail_code){
 	var data = {
 		station_code:detail_code,
@@ -174,7 +173,7 @@ function room_analysis(e,room_no,detail_code){
 				console.log(data);
 				$("#room_details").remove();
 				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>竿数</th><th>总量</th></tr></thead></table></div>');
+                      									'<th>烤房编号</th><th>竿数</th><th>总量</th><th>照片</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
@@ -191,11 +190,21 @@ function room_analysis(e,room_no,detail_code){
 			      columns:[
 			        {data:'room_no'},
 			        {data:'packing_amount'},
-			        {data:'sum'}     
-			      ]
+			        {data:'sum'},
+			        {data:'room_no',render:function(data){
+			        	
+			        	return '<button class="img">查看</button>';
+			        }}     
+			      ],
+			      initComplete: function(data) {
+			      	$(".img").on('click',function(){
+		        		$("#Modal").modal('toggle');
+		        	});
+			      }
 				});
 			}
 		});
+		
 	}else if($(e).hasClass("category")){
 		data.type = 'category';
 		$.ajax({
@@ -335,6 +344,7 @@ function room_analysis(e,room_no,detail_code){
 			}
 		});
 	}
+
 }
 
 function initTable(tTrolleys_data){
