@@ -71,13 +71,13 @@ class PackingDetailController < ApplicationController
 		elsif params[:code].to_s.length == 10
 			if params[:type] == "sum"
 				if params[:room_no] == "0"
-					@sum = Packing.find_by_sql ['select r.room_no,sum(cast(p.average_weight as float) * p.packing_amount),sum(p.packing_amount) as packing_amount from packings p left join tasks t on t.id = p.task_id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? group by r.room_no order by cast(r.room_no as int)',params[:station_code]]
+					@sum = Packing.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,f.breed,sum(cast(p.average_weight as float) * p.packing_amount),sum(p.packing_amount) as packing_amount from packings p left join fresh_tobaccos f on f.task_id = p.task_id left join tasks t on t.id = p.task_id left join contracts c on c.task_id = t.id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? group by r.room_no,f.breed,c.party_b,c.work_started,c.work_finished order by cast(r.room_no as int),c.work_started',params[:station_code]]
 					respond_to do |format|
 					   format.html
 					   format.json { render json:{ sum: @sum }}
 					end
 				else
-					@sum = Packing.find_by_sql ['select r.room_no,sum(cast(p.average_weight as float) * p.packing_amount),sum(p.packing_amount) as packing_amount from packings p left join tasks t on t.id = p.task_id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? and r.room_no = ? group by r.room_no order by cast(r.room_no as int)',params[:station_code],params[:room_no]]
+					@sum = Packing.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,f.breed,sum(cast(p.average_weight as float) * p.packing_amount),sum(p.packing_amount) as packing_amount from packings p left join fresh_tobaccos f on f.task_id = p.task_id left join tasks t on t.id = p.task_id left join contracts c on c.task_id = t.id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? and r.room_no = ? group by r.room_no,f.breed,c.party_b,c.work_started,c.work_finished order by cast(r.room_no as int),c.work_started',params[:station_code],params[:room_no]]
 					respond_to do |format|
 					   format.html
 					   format.json { render json:{ sum: @sum }}

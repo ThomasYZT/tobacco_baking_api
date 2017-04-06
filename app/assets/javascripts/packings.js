@@ -12,61 +12,84 @@
 			}else if(code.length == 4){
 				$(".active").html(data.city_name[0].title+"市装烟数据统计");
 			}
-			var packing_weight = 0;
-			var packing_sum = 0;
-			var packing_category = [];
-			var packing_type = [];
-			var uniformity = [];
-			var status = [];
+
+			/*
+			 * 定义统计数据
+			 */
+			var packing_weight = 0;  //装烟量
+			var packing_sum = 0;  //编烟竿数
+			var packing_category = [];  //分类编烟统计
+			var packing_type = [];  //竿夹内均匀性统计
+			var status = [];  //分类装烟情况
+			var uniformity = [];  //装烟均匀性统计
 			var tTrolleys_data = [];
+			var has_same = false;
+			var _x = null;
+			var map = {};
+
+			/*
+			 * 装烟量
+			 */
 			for(var i=0;i<data.packing_weight.length;i++){
 				packing_weight += parseFloat(data.packing_weight[i].sum);
 			}
+
+			/*
+			 * 编烟竿数
+			 */
 			for(var i=0;i<data.packing_sum.length;i++){
 				packing_sum += parseFloat(data.packing_sum[i].sum);
 			}
 
-			for(var i=0;i<data.packing_weight_by_counties.length;i++){
-				var map = {};
-				map.title = data.packing_weight_by_counties[i].title;
-				map.weight = parseFloat(data.packing_weight_by_counties[i].weight);
-				map.sum = parseFloat(data.packing_weight_by_counties[i].sum);
-				tTrolleys_data.push(map);
-			}
-
-			for(var i=0;i<data.by_category.length;i++){
-				var map = {};
-				map.name = data.by_category[i].category;
-				map.y = data.by_category[i].packing_sum;
-				packing_category.push(map);
+			/*
+			 * 分类编烟统计
+			 */
+			map = {};
+			map.name = $.trim(data.by_category[0].category);
+			map.y = parseInt(data.by_category[0].packing_sum);
+			packing_category.push(map);
+			for(var i=1;i<data.by_category.length;i++){
+				has_same = false;
+				_x = null;
+				for(var j=0; j<packing_category.length; j++){
+					if($.trim(packing_category[j].name) == $.trim(data.by_category[i].category)){
+						has_same = true;
+						_x = j;
+					}
+				}
+				if(has_same){
+					packing_category[_x].y += parseInt(data.by_category[i].packing_sum);
+				}else {
+					map = {};
+					map.name = $.trim(data.by_category[i].category);
+					map.y = parseInt(data.by_category[i].packing_sum);
+					packing_category.push(map);
+				}
 			}
 			packing_category[0].sliced = true;
 			packing_category[0].selected = true;
 
+			/*
+			 * 竿夹内均匀性统计
+			 */
 			for(var i=0;i<data.by_packing_type.length;i++){
 				var map = {};
-				if(data.by_packing_type[i].packing_type == "各竿/夹量基本一致"){
+				if($.trim(data.by_packing_type[i].packing_type) == "各竿/夹量基本一致"){
 					map.name = "正确";
-					map.y = data.by_packing_type[i].sum;
+					map.y = parseInt(data.by_packing_type[i].sum);
 					packing_type.push(map);
-				} else if(data.by_packing_type[i].packing_type == "各竿/夹量不一致") {
+				} else if($.trim(data.by_packing_type[i].packing_type) == "各竿/夹量不一致") {
 					map.name = "不正确";
-					map.y = data.by_packing_type[i].sum;
+					map.y = parseInt(data.by_packing_type[i].sum);
 					map.sliced = true;
 					map.selected = true;
 					packing_type.push(map);
 				}
 			}
 
-			for(var i=0;i<data.by_uniformity.length;i++){
-				var map = {};
-				map.name = data.by_uniformity[i].uniformity;
-				map.y = data.by_uniformity[i].sum;
-				uniformity.push(map);
-			}
-			uniformity[0].sliced = true;
-			uniformity[0].selected = true;
-			
+			/*
+			 * 分类装烟情况
+			 */
 			for(var i=0;i<data.by_status.length;i++){
 				var map = {};
 				if(data.by_status[i].status == "f"){
@@ -81,7 +104,47 @@
 					status.push(map);
 				}
 			}
-			//初始化表格数据
+
+			/*
+			 * 装烟均匀性统计
+			 */
+			map = {};
+			map.name = $.trim(data.by_uniformity[0].uniformity);
+			map.y = parseInt(data.by_uniformity[0].sum);
+			uniformity.push(map);
+			for(var i=1;i<data.by_uniformity.length;i++){
+				has_same = false;
+				_x = null;
+				for(var j=0; j<uniformity.length; j++){
+					if($.trim(uniformity[j].name) == $.trim(data.by_uniformity[i].uniformity)){
+						has_same = true;
+						_x = j;
+					}
+				}
+				if(has_same){
+					uniformity[_x].y += parseInt(data.by_uniformity[i].sum);
+				}else {
+					map = {};
+					map.name = $.trim(data.by_uniformity[i].uniformity);
+					map.y = parseInt(data.by_uniformity[i].sum);
+					uniformity.push(map);
+				}
+			}
+			uniformity[0].sliced = true;
+			uniformity[0].selected = true;
+
+			/*
+			 * 表格数据初始化
+			 */
+			for(var i=0;i<data.packing_weight_by_counties.length;i++){
+				var map = {};
+				map.title = data.packing_weight_by_counties[i].title;
+				map.weight = parseFloat(data.packing_weight_by_counties[i].weight);
+				map.sum = parseFloat(data.packing_weight_by_counties[i].sum);
+				tTrolleys_data.push(map);
+			}
+
+			//tTrolleys表格数据总计
 			for(var j=0;j<tTrolleys_data.length;j++){
 				for(var i=0;i<data.by_category_counties.length;i++){
 					if(tTrolleys_data[j].title == data.by_category_counties[i].title){
@@ -131,8 +194,6 @@
 					}
 				}
 			}
-			console.log(tTrolleys_data)
-
 			initChart(packing_weight, packing_sum, packing_category, packing_type, uniformity, status);
 			initTable(tTrolleys_data);
 		}
@@ -142,90 +203,90 @@
 
 function initTable(tTrolleys_data){
 	//初始化datatable
-			$("#tTrolleys").DataTable({
-			  paging: false,//分页
-		      ordering: false,//是否启用排序
-		      searching: false,//搜索
-		      language: {
-		        search: '',//右上角的搜索文本，可以写html标签
-		        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
-		        //下面三者构成了总体的左下角的内容。
-		        info: "",//左下角的信息显示，大写的词为关键字。
-		        infoEmpty: "",//筛选为空时左下角的显示。
-		        infoFiltered: ""//筛选之后的左下角筛选提示，
-		      },
-		      data:tTrolleys_data,
-		      columns:[
-	            {data:'title'},
-	            {data:'weight',render:function(data,type,row){
-	            	return parseFloat(data).toFixed(2);
-	            }},
-	            {data:'sum'},
-	            {data:'homogeny',render:function(data,type,row){
-	            	if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'mixed',render:function(data,type,row){
-	              	if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'packing_uniformity',render:function(data,type,full){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'packing_ununiformity',render:function(data,type,row){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'t',render:function(data,type,row){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'f',render:function(data,type,full){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'uniformity',render:function(data,type,row){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'tail_less',render:function(data,type,full){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'front_less',render:function(data,type,full){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }}
-	          ]
-			});
+	$("#tTrolleys").DataTable({
+	  	paging: false,//分页
+      	ordering: false,//是否启用排序
+      	searching: false,//搜索
+      	language: {
+        	search: '',//右上角的搜索文本，可以写html标签
+        	zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
+        	//下面三者构成了总体的左下角的内容。
+        	info: "",//左下角的信息显示，大写的词为关键字。
+        	infoEmpty: "",//筛选为空时左下角的显示。
+        	infoFiltered: ""//筛选之后的左下角筛选提示，
+     	},
+      	data:tTrolleys_data,
+      	columns:[
+        	{data:'title'},
+        	{data:'weight',render:function(data,type,row){
+        		return parseFloat(data).toFixed(2);
+        	}},
+        	{data:'sum'},
+        	{data:'homogeny',render:function(data,type,row){
+        		if(data){
+        			return parseFloat(data).toFixed(2);
+        		}else{
+        			return "0";
+        		}
+        	}},
+        	{data:'mixed',render:function(data,type,row){
+          		if(data){
+        			return parseFloat(data).toFixed(2);
+        		}else{
+        			return "0";
+        		}
+        	}},
+        	{data:'packing_uniformity',render:function(data,type,full){
+            	if(data){
+        			return parseFloat(data).toFixed(2);
+        		}else{
+        			return "0";
+        		}
+        	}},
+        	{data:'packing_ununiformity',render:function(data,type,row){
+            	if(data){
+        			return parseFloat(data).toFixed(2);
+        		}else{
+        			return "0";
+        		}
+        	}},
+        	{data:'t',render:function(data,type,row){
+            	if(data){
+        			return parseFloat(data).toFixed(2);
+        		}else{
+        			return "0";
+        		}
+        	}},
+        	{data:'f',render:function(data,type,full){
+            	if(data){
+        			return parseFloat(data).toFixed(2);
+        		}else{
+        			return "0";
+        		}
+        	}},
+	        {data:'uniformity',render:function(data,type,row){
+	            if(data){
+	        		return parseFloat(data).toFixed(2);
+	        	}else{
+	        		return "0";
+	        	}
+	        }},
+	        {data:'tail_less',render:function(data,type,full){
+	            if(data){
+	        		return parseFloat(data).toFixed(2);
+	        	}else{
+	        		return "0";
+	        	}
+	        }},
+	        {data:'front_less',render:function(data,type,full){
+	            if(data){
+	        		return parseFloat(data).toFixed(2);
+	        	}else{
+	        		return "0";
+	        	}
+	        }}
+      	]
+	});
 }
 
 function initChart(packing_weight, packing_sum, packing_category, packing_type, uniformity, status){
@@ -239,7 +300,7 @@ function initChart(packing_weight, packing_sum, packing_category, packing_type, 
         },
         credits: { enabled: false},
         xAxis: {
-            categories: ['装烟量','杆数']  //指定x轴分组
+            categories: ['鲜烟量','编烟杆数','装烟房数']  //指定x轴分组
         },
         yAxis: {
             title: {
@@ -252,10 +313,13 @@ function initChart(packing_weight, packing_sum, packing_category, packing_type, 
         series: [{  //指定数据列
         	name:'统计',
             data: [{
-            	name:'装烟量(公斤)',
+            	name:'鲜烟量(公斤)',
             	y:parseInt(packing_weight)
             },{
-            	name:'杆数(杆)',
+            	name:'编烟杆数(杆)',
+            	y:parseInt(packing_sum)
+            },{
+            	name:'装烟房数(房)',
             	y:parseInt(packing_sum)
             }] 
         }]

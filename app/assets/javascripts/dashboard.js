@@ -3,8 +3,6 @@
     initKnob();
     ajaxRequest();
 
-    
-
 })(jQuery)
 
 function initKnob(){
@@ -49,36 +47,74 @@ function ajaxRequest(){
                 $(".name").html(data.station_name[0].title+"总体数据统计");
             }
             console.log(data)
-            $("#yuefen").text(data.time[0]+"年")
-            //应用烤房
+            $("#yuefen").text(data.time[0]+"年");
+
+            /*
+             * 应用烤房
+             */
             //$("#used_room").text(data.used_room[0].count);
             $("#used_room").text(data.used_room[0].sum);
-            //应用面积
+
+            /*
+             * 应用面积
+             */
             //$("#used_area").text(parseFloat(data.used_area[0].sum).toFixed(2));
             $("#used_area").text(data.used_area);
-            //鲜烟总量( = 过熟烟叶＋适熟烟叶＋欠熟烟叶)
+
+            /*
+             * 鲜烟总量
+             */
             $("#fresh_sum").text(parseFloat(data.fresh_sum[0].sum).toFixed(2));
-            //干烟总量
+
+            /*
+             * 干烟总量
+             */
             if(data.dry_sum[0].sum == null){
                 $("#dry_sum").text('0');
             }else{
                 $("#dry_sum").text(parseFloat(data.dry_sum[0].sum).toFixed(2));
             }
-            
+
+            /*
+             * 平均每座烤房已烘烤房数
+             * 平均每房烘烤公斤数
+             */
+            if(data.time[0] >= 2017){
+                $(".average_room").text("平均每座烤房已烤"+parseInt(data.average_room[0].sum)+"房");
+            }else{
+                $(".average_room").text("平均每座烤房已烤"+parseInt(data.average_room[0].sum/data.used_room[0].sum)+"房");
+            }
+            $(".average_sum").text("平均每房烘烤鲜烟"+(((data.fresh_sum[0].sum).toFixed(2))/data.average_room[0].sum).toFixed(2)+"公斤");
+
             $(".using_room").text("正在红烤房数 "+data.using_rooms[0].count);
             $(".over_room").text("烘烤已结束烤房数 "+data.over_rooms[0].count);
-            //过熟烟叶＋适熟烟叶＋欠熟烟叶( = 鲜烟总量)
-            var leaf_sum =  parseFloat(data.fresh_sum[0].sum);
+
+            /*
+             * 鲜烟成熟度
+             */
+            
+            //欠熟烟重量
+            var immature_weight = parseInt(data.maturity[0].weight_of_immature);
+            //适熟烟重量
+            var mature_weight = parseInt(data.maturity[0].weight_of_mature);
+            //过熟烟重量
+            var over_mature_weight = parseInt(data.maturity[0].weight_of_over_mature);
+            //欠熟+适熟+过熟总量
+            //var leaf_sum =  parseFloat(data.fresh_sum[0].sum);
+            var leaf_sum = immature_weight + mature_weight + over_mature_weight;
             //欠熟烟叶比例
-            var immature_p = parseFloat(data.maturity[0].weight_of_immature)/leaf_sum *100;
+            var immature_p = (immature_weight/leaf_sum *100).toFixed(2);
             //适熟烟叶比例
-            var mature_p = parseFloat(data.maturity[0].weight_of_mature)/leaf_sum *100;
+            var mature_p = (mature_weight/leaf_sum *100).toFixed(2);
             //过熟烟叶比例
-            var over_mature_p = parseFloat(data.maturity[0].weight_of_over_mature)/leaf_sum *100;
-            $(".mature").html("适熟烟叶 "+parseFloat(data.maturity[0].weight_of_mature) +"—"+mature_p.toFixed(1)+"%");
-            $(".over_mature").html("过熟烟叶 "+parseFloat(data.maturity[0].weight_of_over_mature) +"—"+over_mature_p.toFixed(1)+"%");
-            $(".immature").html("欠熟烟叶 "+parseFloat(data.maturity[0].weight_of_immature) +"—"+immature_p.toFixed(1)+"%");
-            //各县正组青烟杂色统计
+            var over_mature_p = (over_mature_weight/leaf_sum *100).toFixed(2);
+            $(".mature").html("适熟烟叶 "+ mature_weight +"—"+mature_p+"%");
+            $(".over_mature").html("过熟烟叶 "+ over_mature_weight +"—"+over_mature_p+"%");
+            $(".immature").html("欠熟烟叶 "+ immature_weight +"—"+immature_p+"%");
+            
+            /*
+             * 各县正组青烟杂色统计
+             */
             var zz = 0;
             var q = 0;
             var zs = 0;
@@ -90,7 +126,7 @@ function ajaxRequest(){
             var zz_p = (zz/data.dry_sum[0].sum).toFixed(3);
             var q_p = (q/data.dry_sum[0].sum).toFixed(3);
             var zs_p = (zs/data.dry_sum[0].sum).toFixed(3);
-            console.log(zz,q,zs,zz_p,q_p,zs_p);
+            //console.log(zz,q,zs,zz_p,q_p,zs_p);
             $(".zz").html("正组 " + zz.toFixed(2) + "公斤 — " + (zz_p*100).toFixed(2) + "%");
             $(".q").html("青烟 " + q.toFixed(2) + "公斤 — " + (q_p*100).toFixed(2) + "%");
             $(".zs").html("杂色 " + zs.toFixed(2) + "公斤 — " + (zs_p*100).toFixed(2) + "%");
@@ -111,19 +147,11 @@ function ajaxRequest(){
                 $(".this_m_baking_sum").text(parseFloat(data.this_m_baking_sum[0].sum).toFixed(2));
             }
             
-
-            /*var count_sum = 0;//烤房总数
-            var weight_sum = 0;//烘烤总数
-            for(var i=0;i<data.average_room.length;i++){
-                count_sum += parseInt(data.average_room[i].count);
-                weight_sum += parseInt(data.average_room[i].sum + 0);
-            }*/
-            //$(".average_room").text("平均每座烤房已烤"+parseInt(count_sum/data.average_room.length)+"座")
-            $(".average_room").text("平均每座烤房已烤"+parseInt(data.average_room[0].sum/data.used_room[0].sum)+"座")
-            //$(".average_sum").text("平均每座烤房"+parseInt(weight_sum/data.average_room.length)+"公斤")
-            $(".average_sum").text("平均每座烤房"+parseInt(data.fresh_sum[0].sum/data.used_room[0].sum)+"公斤")
+            
+            
+            
             //正组、青烟、杂色烟比例情况统计
-            console.log(data.every_c_d_per[0]);
+            //console.log(data.every_c_d_per[0]);
             var counties = [];
             var zz_data = {
                 name:'正组',
@@ -144,7 +172,7 @@ function ajaxRequest(){
                 q_data.data.push(parseFloat(data.every_c_d_per[i].q));
             }
             var p_data = [zz_data,zs_data,q_data];
-            console.log(p_data)
+            //console.log(p_data)
 
 
             $('#container').highcharts({ 

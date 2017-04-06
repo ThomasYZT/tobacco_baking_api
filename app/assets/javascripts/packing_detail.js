@@ -171,13 +171,23 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
+				var breed_data = [[data.sum[0]]];
+				for(var i=1; i<data.sum.length; i++){
+					if(data.sum[i].room_no == breed_data[breed_data.length-1][breed_data[breed_data.length-1].length-1].room_no){
+						breed_data[breed_data.length-1].push(data.sum[i]);
+					}else{
+						breed_data.push([data.sum[i]])
+					}
+					
+				}
+				console.log(breed_data)
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>竿数</th><th>总量</th><th>照片</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="6">第一烤</th><th colspan="6">第二烤</th><th colspan="6">第三烤</th><th colspan="6">第四烤</th><th colspan="6">第五烤</th><th colspan="6">第六烤</th></tr><tr><th>烟农</th><th>时间</th><th>品种</th><th>装烟量</th><th>竿数</th><th>照片</th><th>烟农</th><th>时间</th><th>品种</th><th>装烟量</th><th>竿数</th><th>照片</th><th>烟农</th><th>时间</th><th>品种</th><th>装烟量</th><th>竿数</th><th>照片</th><th>烟农</th><th>时间</th><th>品种</th><th>装烟量</th><th>竿数</th><th>照片</th><th>烟农</th><th>时间</th><th>品种</th><th>装烟量</th><th>竿数</th><th>照片</th><th>烟农</th><th>时间</th><th>品种</th><th>装烟量</th><th>竿数</th><th>照片</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
 			      searching: false,//搜索
+			      scrollX: true,
 			      language: {
 			        search: '',//右上角的搜索文本，可以写html标签
 			        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
@@ -186,15 +196,264 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:data.sum,
+			      data:breed_data,
 			      columns:[
-			        {data:'room_no'},
-			        {data:'packing_amount'},
-			        {data:'sum'},
-			        {data:'room_no',render:function(data){
-			        	
-			        	return '<button class="img">查看</button>';
-			        }}     
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	return data[0].room_no;
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].work_started + " 至 " + data[0].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].breed;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].sum;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].packing_amount;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return '<button class="img">查看</button>';
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].work_started + " 至 " + data[1].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].breed;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].sum;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].packing_amount;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return '<button class="img">查看</button>';
+			        	}else{
+			        		return " ";
+			        	}
+			        }}, 
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].work_started + " 至 " + data[2].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].breed;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].sum;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].packing_amount;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return '<button class="img">查看</button>';
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].work_started + " 至 " + data[3].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].breed;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].sum;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].packing_amount;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return '<button class="img">查看</button>';
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].work_started + " 至 " + data[4].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].breed;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].sum;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].packing_amount;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return '<button class="img">查看</button>';
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].work_started + " 至 " + data[5].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].breed;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].sum;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].packing_amount;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return '<button class="img">查看</button>';
+			        	}else{
+			        		return " ";
+			        	}
+			        }}
+
 			      ],
 			      initComplete: function(data) {
 			      	$(".img").on('click',function(){
@@ -214,9 +473,48 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
+				var analysis_data = [];
+				var map = {};
+				map.room_no = data.category[0].room_no;
+				map.same = 0;
+				map.mix = 0;
+				if($.trim(data.category[0].category) == "同杆/夹同质"){
+					map.same = data.category[0].sum;
+				}else if($.trim(data.category[0].category) == "混编"){
+					map.mix = data.category[0].sum;
+				}
+				analysis_data.push(map);
+				for(var i=1; i<data.category.length; i++){
+					var status = false;
+					var _x = null;
+					for(var j=0; j<analysis_data.length; j++){
+						if(data.category[i].room_no == analysis_data[j].room_no){
+							status = true;
+							_x = j;
+						}
+					}
+					if(status){
+						if($.trim(data.category[i].category) == "同杆/夹同质"){
+							analysis_data[_x].same += data.category[i].sum;
+						}else if($.trim(data.category[i].category) == "混编"){
+							analysis_data[_x].mix += data.category[i].sum;
+						}
+					}else{
+						var map = {};
+						map.room_no = data.category[i].room_no;
+						map.same = 0;
+						map.mix = 0;
+						if($.trim(data.category[i].category) == "同杆/夹同质"){
+							map.same = data.category[i].sum;
+						}else if($.trim(data.category[i].category) == "混编"){
+							map.mix = data.category[i].sum;
+						}
+						analysis_data.push(map);
+					}
+				}
+				console.log(analysis_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>编竿分类</th><th>总量</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">同杆/夹同质</th><th colspan="2">混编</th></tr><tr><th>总重</th><th>占比</th><th>总重</th><th>占比</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
@@ -229,11 +527,25 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:data.category,
+			      data:analysis_data,
 			      columns:[
 			        {data:'room_no'},
-			        {data:'category'},
-			        {data:'sum'}       
+			        {data:'same',render:function(data){
+			        	return data.toFixed(2);
+			        }},
+			        {data:'same',render:function(data,type,full){
+			        	var sum = full.same+full.mix;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }},
+			        {data:'mix',render:function(data){
+			        	return data.toFixed(2);
+			        }},
+			        {data:'mix',render:function(data,type,full){
+			        	var sum = full.same+full.mix;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }}     
 			      ]
 				});
 			}
@@ -247,9 +559,56 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
+				var analysis_data = [];
+				var map = {};
+				map.room_no = data.uniformity[0].room_no;
+				map.junyun = 0;
+				map.m_x = 0;
+				map.x_m = 0;
+				if($.trim(data.uniformity[0].uniformity) == "均匀"){
+					map.junyun = data.uniformity[0].sum;
+				}else if($.trim(data.uniformity[0].uniformity) == "前密后稀"){
+					map.m_x = data.uniformity[0].sum;
+				}else if($.trim(data.uniformity[0].uniformity) == "前稀后密"){
+					map.x_m = data.uniformity[0].sum;
+				}
+				analysis_data.push(map);
+				for(var i=1; i<data.uniformity.length; i++){
+					var status = false;
+					var _x = null;
+					for(var j=0; j<analysis_data.length; j++){
+						if(data.uniformity[i].room_no == analysis_data[j].room_no){
+							status = true;
+							_x = j;
+						}
+					}
+					if(status){
+						if($.trim(data.uniformity[i].uniformity) == "均匀"){
+							analysis_data[_x].junyun += data.uniformity[i].sum;
+						}else if($.trim(data.uniformity[i].uniformity) == "前密后稀"){
+							analysis_data[_x].m_x += data.uniformity[i].sum;
+						}else if($.trim(data.uniformity[i].uniformity) == "前稀后密"){
+							analysis_data[_x].x_m += data.uniformity[i].sum;
+						}
+					}else{
+						var map = {};
+						map.room_no = data.uniformity[i].room_no;
+						map.junyun = 0;
+						map.m_x = 0;
+						map.x_m = 0;
+						if($.trim(data.uniformity[i].uniformity) == "均匀"){
+							map.junyun = data.uniformity[i].sum;
+						}else if($.trim(data.uniformity[i].uniformity) == "前密后稀"){
+							map.m_x = data.uniformity[i].sum;
+						}else if($.trim(data.uniformity[i].uniformity) == "前稀后密"){
+							map.x_m = data.uniformity[i].sum;
+						}
+						analysis_data.push(map);
+					}
+				}
+				console.log(analysis_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>均匀性</th><th>总量</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">均匀</th><th colspan="2">前密后稀</th><th colspan="2">前稀后密</th></tr><tr><th>总重</th><th>占比</th><th>总重</th><th>占比</th><th>总重</th><th>占比</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
@@ -262,11 +621,33 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:data.uniformity,
+			      data:analysis_data,
 			      columns:[
 			        {data:'room_no'},
-			        {data:'uniformity'},
-			        {data:'sum'}       
+			        {data:'junyun',render:function(data){
+			        	return data.toFixed(2);
+			        }},
+			        {data:'junyun',render:function(data,type,full){
+			        	var sum = full.junyun+full.m_x+full.x_m;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }},
+			        {data:'m_x',render:function(data){
+			        	return data.toFixed(2);
+			        }},
+			        {data:'m_x',render:function(data,type,full){
+			        	var sum = full.junyun+full.m_x+full.x_m;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }},
+			        {data:'x_m',render:function(data){
+			        	return data.toFixed(2);
+			        }},
+			        {data:'x_m',render:function(data,type,full){
+			        	var sum = full.junyun+full.m_x+full.x_m;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }}       
 			      ]
 				});
 			}
@@ -280,9 +661,48 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
+				var analysis_data = [];
+				var map = {};
+				map.room_no = data.packing_type[0].room_no;
+				map.yizhi = 0;
+				map.buyizhi = 0;
+				if($.trim(data.packing_type[0].packing_type) == "各竿/夹量基本一致"){
+					map.yizhi = data.packing_type[0].sum;
+				}else if($.trim(data.packing_type[0].packing_type) == "各竿/夹量不一致"){
+					map.buyizhi = data.packing_type[0].sum;
+				}
+				analysis_data.push(map);
+				for(var i=1; i<data.packing_type.length; i++){
+					var status = false;
+					var _x = null;
+					for(var j=0; j<analysis_data.length; j++){
+						if(data.packing_type[i].room_no == analysis_data[j].room_no){
+							status = true;
+							_x = j;
+						}
+					}
+					if(status){
+						if($.trim(data.packing_type[i].packing_type) == "各竿/夹量基本一致"){
+							analysis_data[_x].yizhi += data.packing_type[i].sum;
+						}else if($.trim(data.packing_type[i].packing_type) == "各竿/夹量不一致"){
+							analysis_data[_x].buyizhi += data.packing_type[i].sum;
+						}
+					}else{
+						var map = {};
+						map.room_no = data.packing_type[i].room_no;
+						map.yizhi = 0;
+						map.buyizhi = 0;
+						if($.trim(data.packing_type[i].packing_type) == "各竿/夹量基本一致"){
+							map.yizhi = data.packing_type[i].sum;
+						}else if($.trim(data.packing_type[i].packing_type) == "各竿/夹量不一致"){
+							map.buyizhi = data.packing_type[i].sum;
+						}
+						analysis_data.push(map);
+					}
+				}
+				console.log(analysis_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>装烟类型</th><th>总量</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">各竿/夹量基本一致</th><th colspan="2">各竿/夹量不一致</th></tr><tr><th>总重</th><th>占比</th><th>总重</th><th>占比</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
@@ -295,11 +715,26 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:data.packing_type,
+			      data:analysis_data,
 			      columns:[
 			        {data:'room_no'},
-			        {data:'packing_type'},
-			        {data:'sum'}       
+			        {data:'yizhi',render:function(data){
+			        	return data.toFixed(2);
+			        }},
+			        {data:'yizhi',render:function(data,type,full){
+
+			        	var sum = full.yizhi+full.buyizhi;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }},
+			        {data:'buyizhi',render:function(data){
+			        	return data.toFixed(2);
+			        }},
+			        {data:'buyizhi',render:function(data,type,full){
+			        	var sum = full.yizhi+full.buyizhi;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }}     
 			      ]
 				});
 			}
@@ -313,9 +748,48 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
+				var analysis_data = [];
+				var map = {};
+				map.room_no = data.status[0].room_no;
+				map.true = 0;
+				map.notrue = 0;
+				if($.trim(data.status[0].status) == "f"){
+					map.true = data.status[0].sum;
+				}else if($.trim(data.status[0].status) == "t"){
+					map.notrue = data.status[0].sum;
+				}
+				analysis_data.push(map);
+				for(var i=1; i<data.status.length; i++){
+					var status = false;
+					var _x = null;
+					for(var j=0; j<analysis_data.length; j++){
+						if(data.status[i].room_no == analysis_data[j].room_no){
+							status = true;
+							_x = j;
+						}
+					}
+					if(status){
+						if($.trim(data.status[i].status) == "f"){
+							analysis_data[_x].true += data.status[i].sum;
+						}else if($.trim(data.status[i].status) == "t"){
+							analysis_data[_x].notrue += data.status[i].sum;
+						}
+					}else{
+						var map = {};
+						map.room_no = data.status[i].room_no;
+						map.true = 0;
+						map.notrue = 0;
+						if($.trim(data.status[i].status) == "f"){
+							map.true = data.status[i].sum;
+						}else if($.trim(data.status[i].status) == "t"){
+							map.notrue = data.status[i].sum;
+						}
+						analysis_data.push(map);
+					}
+				}
+				console.log(analysis_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>分类装烟情况</th><th>总量</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">正确</th><th colspan="2">错误</th></tr><tr><th>总重</th><th>占比</th><th>总重</th><th>占比</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
@@ -328,17 +802,26 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:data.status,
+			      data:analysis_data,
 			      columns:[
 			        {data:'room_no'},
-			        {data:'status',render:function(data){
-			        	if(data == 'f'){
-			        		return '错误';
-			        	}else{
-			        		return '正确';
-			        	}
+			        {data:'true',render:function(data){
+			        	return data.toFixed(2);
 			        }},
-			        {data:'sum'}       
+			        {data:'true',render:function(data,type,full){
+
+			        	var sum = full.true+full.notrue;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }},
+			        {data:'notrue',render:function(data){
+			        	return data.toFixed(2);
+			        }},
+			        {data:'notrue',render:function(data,type,full){
+			        	var sum = full.true+full.notrue;
+			        	var p = (data/sum*100).toFixed(2);
+			        	return p+'%';
+			        }}       
 			      ]
 				});
 			}
@@ -457,10 +940,13 @@ function initChart(packing_weight, packing_sum, packing_category, packing_type, 
         series: [{  //指定数据列
         	name:'统计',
             data: [{
-            	name:'装烟量(公斤)',
+            	name:'鲜烟量(公斤)',
             	y:parseInt(packing_weight)
             },{
-            	name:'杆数(杆)',
+            	name:'编烟杆数(杆)',
+            	y:packing_sum
+            },{
+            	name:'装烟房数(房)',
             	y:packing_sum
             }] 
         }]
