@@ -71,13 +71,13 @@ class PackingDetailController < ApplicationController
 		elsif params[:code].to_s.length == 10
 			if params[:type] == "sum"
 				if params[:room_no] == "0"
-					@sum = Packing.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,f.breed,sum(cast(p.average_weight as float) * p.packing_amount),sum(p.packing_amount) as packing_amount from packings p left join fresh_tobaccos f on f.task_id = p.task_id left join tasks t on t.id = p.task_id left join contracts c on c.task_id = t.id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? group by r.room_no,f.breed,c.party_b,c.work_started,c.work_finished order by cast(r.room_no as int),c.work_started',params[:station_code]]
+					@sum = Packing.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,f.breed,sum(cast(p.average_weight as float) * p.packing_amount),sum(p.packing_amount) as packing_amount,p.id from packings p left join fresh_tobaccos f on f.task_id = p.task_id left join tasks t on t.id = p.task_id left join contracts c on c.task_id = t.id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? group by r.room_no,f.breed,c.party_b,c.work_started,c.work_finished,p.id order by cast(r.room_no as int),c.work_started',params[:station_code]]
 					respond_to do |format|
 					   format.html
 					   format.json { render json:{ sum: @sum }}
 					end
 				else
-					@sum = Packing.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,f.breed,sum(cast(p.average_weight as float) * p.packing_amount),sum(p.packing_amount) as packing_amount from packings p left join fresh_tobaccos f on f.task_id = p.task_id left join tasks t on t.id = p.task_id left join contracts c on c.task_id = t.id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? and r.room_no = ? group by r.room_no,f.breed,c.party_b,c.work_started,c.work_finished order by cast(r.room_no as int),c.work_started',params[:station_code],params[:room_no]]
+					@sum = Packing.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,f.breed,sum(cast(p.average_weight as float) * p.packing_amount),sum(p.packing_amount) as packing_amount,p.id from packings p left join fresh_tobaccos f on f.task_id = p.task_id left join tasks t on t.id = p.task_id left join contracts c on c.task_id = t.id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? and r.room_no = ? group by r.room_no,f.breed,c.party_b,c.work_started,c.work_finishedp,p.id order by cast(r.room_no as int),c.work_started',params[:station_code],params[:room_no]]
 					respond_to do |format|
 					   format.html
 					   format.json { render json:{ sum: @sum }}
@@ -140,6 +140,13 @@ class PackingDetailController < ApplicationController
 					   format.json { render json:{ status: @status }}
 					end
 				end
+			elsif params[:p_id]
+				@images = PackingImage.find_by_sql ["SELECt pi.id,'system/packing_images/images/000/'||'00'||pi.id/1000||'/'||substr('0000'||pi.id%1000,length('0000'||pi.id%1000)-2,4)||'/original' as files,pi.image_file_name FROM public.packing_images pi  left join public.packings p  on  p.id=pi.packing_id left join public.tasks t  on t.id=p.task_id where 1=1 and p.id= ?",params[:p_id]]
+				respond_to do |format|
+				   format.html
+				   format.json { render json:{ images: @images }}
+				end
+
 			else
 				@counties_code = County.find_by_sql ["select * from stations s where s.code = ?",params[:code].to_s]
 			

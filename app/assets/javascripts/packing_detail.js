@@ -61,12 +61,12 @@
 
 			for(var i=0;i<data.by_packing_type.length;i++){
 				var map = {};
-				if(data.by_packing_type[i].packing_type == "各竿/夹量基本一致"){
-					map.name = "正确";
+				if($.trim(data.by_packing_type[i].packing_type) == "各竿/夹量基本一致"){
+					map.name = "各竿/夹量基本一致";
 					map.y = data.by_packing_type[i].sum;
 					packing_type.push(map);
-				} else if(data.by_packing_type[i].packing_type == "各竿/夹量不一致") {
-					map.name = "不正确";
+				} else if($.trim(data.by_packing_type[i].packing_type) == "各竿/夹量不一致") {
+					map.name = "各竿/夹量不一致";
 					map.y = data.by_packing_type[i].sum;
 					map.sliced = true;
 					map.selected = true;
@@ -238,7 +238,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[0]){
-			        		return '<button class="img">查看</button>';
+			        		return '<button class="img">查看<span style="display:none;">'+data[0].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -457,7 +457,27 @@ function room_analysis(e,room_no,detail_code){
 			      ],
 			      initComplete: function(data) {
 			      	$(".img").on('click',function(){
-		        		$("#Modal").modal('toggle');
+			      		var p_id = $(this).find('span').text();
+			      		$.ajax({
+			      			type:"get",
+							url:"/packing_detail/"+detail_code,
+							dataType:'json',
+							data:{
+								p_id: p_id
+							},
+							success:function(data){
+								console.log(data)
+								var a_hrefs = $("#Modal").find("a");
+								var imgs = $("#Modal").find("img");
+								var images = data.images;
+								for(var i=0;i<imgs.length;i++){
+									$(imgs[i]).attr("src","http://120.25.101.68:9090/"+images[i].files+"/"+images[i].image_file_name)
+									$(a_hrefs[i]).attr("href","http://120.25.101.68:9090/"+images[i].files+"/"+images[i].image_file_name)
+								}
+								$("#Modal").modal('toggle');
+							}
+			      		})
+		        		
 		        	});
 			      }
 				});
