@@ -280,7 +280,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[1]){
-			        		return '<button class="img">查看</button>';
+			        		return '<button class="img">查看<span style="display:none;">'+data[1].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -322,7 +322,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[2]){
-			        		return '<button class="img">查看</button>';
+			        		return '<button class="img">查看<span style="display:none;">'+data[2].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -364,7 +364,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[3]){
-			        		return '<button class="img">查看</button>';
+			        		return '<button class="img">查看<span style="display:none;">'+data[3].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -406,7 +406,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[4]){
-			        		return '<button class="img">查看</button>';
+			        		return '<button class="img">查看<span style="display:none;">'+data[4].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -448,7 +448,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[5]){
-			        		return '<button class="img">查看</button>';
+			        		return '<button class="img">查看<span style="display:none;">'+data[5].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
