@@ -5,6 +5,118 @@
     $('#protocolEndDate').datepicker({
         format: 'yyyy-mm-dd'
     });
+
+
+    var dry_standard_line = [36,38,40,42,46,48,50,54,60,68];
+    var wet_standard_line = [34,36,37,37.5,38,38,39,39,40,42];
+    var time_standard = [2,2,15,4,2,4,2,8,4,4,2,4,2,5,5,6,2,8,12];
+
+    var chart2 = new CanvasJS.Chart("chartContainer2",{
+        culture: "es",
+        zoomEnabled:true,
+        animationEnabled: true,
+        exportEnabled: true,
+        title:{
+            text: "干湿球温度目标曲线",
+            fontSize: 20
+        },    
+        axisX:{
+            title: "时间线",
+            valueFormatString: "HH",
+            lineThickness: 1,
+            lineColor: "black",
+            labelFontColor: "black",
+            titleFontColor: "black"
+        },    
+        axisY:{ 
+            title: "温度",
+            includeZero: false,
+            suffix : "摄氏度",
+            lineColor: "#369EAD",
+            minimum : 30,
+            maximum : 70       
+        },
+        axisY2:{ 
+            title: "温度",
+            includeZero: false,
+            suffix : "摄氏度",
+            lineColor: "#C24642",
+            minimum : 30,
+            maximum : 70
+        },
+        legend: {
+            cursor:"pointer",
+            verticalAlign: "top",
+            fontSize: 14,
+            dockInsidePlotArea: true,
+            verticalAlign: "top",
+            itemclick:function(e){
+              if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+              }
+              else {
+                e.dataSeries.visible = true;            
+              }
+              chart2.render();
+            }
+        },
+        data: [{
+            type: "line",
+            showInLegend: true,
+            name:"干球目标曲线",
+            dataPoints: [
+                { x: new Date(0 - 8*3600000), y: 36 },
+                { x: new Date(2 * 3600000 - 8*3600000), y: 36 },
+                { x: new Date(4 * 3600000 - 8*3600000), y: 38 },
+                { x: new Date(19 * 3600000 - 8*3600000), y: 38 },
+                { x: new Date(23 * 3600000 - 8*3600000), y: 40 },
+                { x: new Date(25 * 3600000 - 8*3600000), y: 40 },
+                { x: new Date(29 * 3600000 - 8*3600000), y: 42 },
+                { x: new Date(31 * 3600000 - 8*3600000), y: 42 },
+                { x: new Date(39 * 3600000 - 8*3600000), y: 46 },
+                { x: new Date(43 * 3600000 - 8*3600000), y: 46 },
+                { x: new Date(47 * 3600000 - 8*3600000), y: 48 },
+                { x: new Date(49 * 3600000 - 8*3600000), y: 48 },
+                { x: new Date(53 * 3600000 - 8*3600000), y: 50 },
+                { x: new Date(55 * 3600000 - 8*3600000), y: 50 },
+                { x: new Date(60 * 3600000 - 8*3600000), y: 54 },
+                { x: new Date(65 * 3600000 - 8*3600000), y: 54 },
+                { x: new Date(71 * 3600000 - 8*3600000), y: 60 },
+                { x: new Date(73 * 3600000 - 8*3600000), y: 60 },
+                { x: new Date(81 * 3600000 - 8*3600000), y: 68 },
+                { x: new Date(93 * 3600000 - 8*3600000), y: 68 }
+            ]
+        },{
+            type: "line",
+            showInLegend: true,
+            name:"湿球目标曲线",
+            axisYType:"secondary",
+            dataPoints: [
+                { x: new Date(0 - 8*3600000), y: 34 },
+                { x: new Date(2 * 3600000 - 8*3600000), y: 34 },
+                { x: new Date(4 * 3600000 - 8*3600000), y: 36 },
+                { x: new Date(19 * 3600000 - 8*3600000), y: 36 },
+                { x: new Date(23 * 3600000 - 8*3600000), y: 37 },
+                { x: new Date(25 * 3600000 - 8*3600000), y: 37 },
+                { x: new Date(29 * 3600000 - 8*3600000), y: 37.5 },
+                { x: new Date(31 * 3600000 - 8*3600000), y: 37.5 },
+                { x: new Date(39 * 3600000 - 8*3600000), y: 38 },
+                { x: new Date(43 * 3600000 - 8*3600000), y: 38 },
+                { x: new Date(47 * 3600000 - 8*3600000), y: 38 },
+                { x: new Date(49 * 3600000 - 8*3600000), y: 38 },
+                { x: new Date(53 * 3600000 - 8*3600000), y: 39 },
+                { x: new Date(55 * 3600000 - 8*3600000), y: 39 },
+                { x: new Date(60 * 3600000 - 8*3600000), y: 39 },
+                { x: new Date(65 * 3600000 - 8*3600000), y: 39 },
+                { x: new Date(71 * 3600000 - 8*3600000), y: 40 },
+                { x: new Date(73 * 3600000 - 8*3600000), y: 40 },
+                { x: new Date(81 * 3600000 - 8*3600000), y: 42 },
+                { x: new Date(93 * 3600000 - 8*3600000), y: 42 }
+            ]
+        }]
+    });
+    chart2.render();
+    
     
     $.ajax({
         type: "get",
@@ -16,57 +128,196 @@
             }
         }
     });
+
     $("#search_btn").click(function() {
+        
+        //获取烤房号
         var addresses = $("#addresses").val();
+        
+        //获取工厂号
         var stations = $("#stations").val();
+        
+        //获取开始日期
         var protocolStartDate = $("#protocolStartDate").val();
+        
+        //获取结束日期
         var protocolEndDate = $("#protocolEndDate").val();
+
+        //弹出等待提示框
+        $("#searchModal").modal('toggle');
+        
         //console.log(addresses+"",stations+"",protocolStartDate+"",protocolEndDate+"")
         if (addresses == "" || stations == "" || protocolStartDate == "" || protocolEndDate == "") {
             alert("请输入完整搜索条件");
         } else {
+            
+            //展开图表区域
             $(".row1").animate({
                 'margin-top': 0
             });
+            
+            //新建曲线区域
             $(".line").append('<div class="row"><div class="col-md-12"><div id="chartContainer" style="height: 400px; width: 100%;"></div></div></div>');
+            
+            //拼接url字符串
             var url = "http://120.25.101.68:8081/stations/" + stations + "/addresses/" + addresses + "/status?startTime=" + protocolStartDate + "&endTime=" + protocolEndDate;
-            //console.log(url);
-            $("#searchModal").modal('toggle');
-            console.log(url)
+            
+            //ajax获取曲线数据
             $.ajax({
                 type: "get",
                 url: url,
-                /*"http://120.25.101.68:8081/stations/6/addresses/00001/status?startTime=2016-6-1&endTime=2016-7-1"*/
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data)
+                    console.log(data);
+
+                    //建立可视化日期范围区域
                     var opt = "<div class='col-md-12' style='height:50px;'><span>开始日期:" + protocolStartDate + "</span><span>结束日期:" + protocolEndDate + "</span></div>";
                     $(".date-info").html(opt);
+
+                    //remove等待提示框
                     $("#searchModal").modal('toggle');
+
+                    //获取曲线数据
                     var data = data.result;
+
+                    //定义曲线点的容器
                     var dataPoints=[];
+
+                    //定义开始时间
                     var StartDateTime; 
+                    StartDateTime=new Date(protocolStartDate.split('-')[0], protocolStartDate.split('-')[1] - 1, protocolStartDate.split('-')[2], '00', '00', '00');
+
+                    //定义结束时间
                     var EndDateTime;
-                    //if(data.length>0)
-                    {
-                      //StartDateTime= data[0].createdAt.split('.')[0];
-                      //EndDateTime= data[data.length-1].createdAt.split('.')[0];
-                      //StartDateTime= StartDateTime.replace('T',' ');
-                      //EndDateTime= EndDateTime.replace('T',' ');
-                      StartDateTime=new Date(protocolStartDate.split('-')[0], protocolStartDate.split('-')[1] - 1, protocolStartDate.split('-')[2], '00', '00', '00');
-                      EndDateTime=new Date(protocolEndDate.split('-')[0], protocolEndDate.split('-')[1]-1, protocolEndDate.split('-')[2], '23', '59', '59');
-                      //console.log(StartDateTime);
-                      //console.log(EndDateTime);
+                    EndDateTime=new Date(protocolEndDate.split('-')[0], protocolEndDate.split('-')[1]-1, protocolEndDate.split('-')[2], '23', '59', '59');
+                    
+                    //定义点的起始时间
+                    var lastdate=0;
+
+                    //定义干球曲线
+                    var dry_ball_line = {
+                        type: "spline",
+                        visible: true,
+                        showInLegend: true,
+                        lineThickness: 1,
+                        name: "干球实际温度",
+                        markerSize: 1,
+                        dataPoints: []
+                    };
+                    dataPoints.push(dry_ball_line);
+
+                    //定义湿球曲线
+                    var wet_ball_line = {
+                        type: "spline",
+                        visible: true,
+                        showInLegend: true,
+                        name: "湿球实际温度",
+                        lineThickness: 1,
+                        markerSize: 1,
+                        dataPoints: []
+                    };
+                    dataPoints.push(wet_ball_line);
+
+                    //定义循环风机高速曲线
+                    var high_speed_line = {
+                        type: "spline",
+                        visible: false,
+                        showInLegend: true,
+                        name: "循环风机高速",
+                        lineThickness: 1,
+                        markerSize: 1,
+                        dataPoints: []
+                    };
+                    dataPoints.push(high_speed_line);
+
+                    //定义循环风机低俗曲线
+                    var low_speed_line = {
+                        type: "spline",
+                        visible: false,
+                        showInLegend: true,
+                        name: "循环风机低速",
+                        lineThickness: 1,
+                        markerSize: 1,
+                        dataPoints: []
                     }
+                    dataPoints.push(low_speed_line);
+
+                    //定义风门状态曲线
+                    var wind_door_status_line ={
+                        type: "spline",
+                        visible: false,
+                        showInLegend: true,
+                        name: "风门状态",
+                        lineThickness: 1,
+                        markerSize: 1,
+                        dataPoints: []
+                    }
+                    dataPoints.push(wind_door_status_line);
+
+                    //定义助燃风机状态
+                    var combustion_fan_status_line = {
+                        type: "spline",
+                        visible: false,
+                        showInLegend: true,
+                        name: "助燃风机状态",
+                        lineThickness: 1,
+                        markerSize: 1,
+                        dataPoints: []
+                    }
+                    dataPoints.push(combustion_fan_status_line);
+
+                    for (var i = 0; i < data.length; i ++) {
+                        /*
+                         * 解析数据
+                         */
+                        var s = data[i].alarm;
+                        var ss = data[i].normal;
+                        var alarm = s.split(",");
+                        var normal = ss.split(",");
+                        var wetball = (parseFloat(alarm[6]) * 256 + parseFloat(alarm[7])) / 10;
+                        var dryball = (parseFloat(alarm[4]) * 256 + parseFloat(alarm[5])) / 10;
+                        var wind_door_status = getBits(normal[10], 0);
+                        var combustion_fan_status = getBits(normal[10], 2);
+                        var high_speed = getBits(normal[10], 6);
+                        var low_speed = getBits(normal[10], 7);
+                        var dateTime = data[i].createdAt.split('.')[0];
+                        var date = dateTime.split('T')[0];
+                        var time = dateTime.split('T')[1];
+                        
+                        var createdAt = (new Date(date.split('-')[0], date.split('-')[1] - 1, date.split('-')[2], time.split(':')[0], time.split(':')[1] - 1, time.split(':')[2])).getTime() + 8*3600000;
+                        if (dryball<1 || dryball>=80 || wetball<1 || wetball>=80)
+                        {
+                          continue;
+                        }
+                        if (lastdate==0){
+                            lastdate=createdAt;
+                            dataPoints[0].dataPoints.push({x: new Date(createdAt),y: dryball});
+                            dataPoints[1].dataPoints.push({x: new Date(createdAt),y: wetball});
+                            dataPoints[2].dataPoints.push({x: new Date(createdAt),y: high_speed});
+                            dataPoints[3].dataPoints.push({x: new Date(createdAt),y: low_speed});
+                            dataPoints[4].dataPoints.push({x: new Date(createdAt),y: wind_door_status});
+                            dataPoints[5].dataPoints.push({x: new Date(createdAt),y: combustion_fan_status});
+                        }
+                        if (createdAt-lastdate>30000){
+                            lastdate=createdAt;
+                            dataPoints[0].dataPoints.push({x: new Date(createdAt),y: dryball});
+                            dataPoints[1].dataPoints.push({x: new Date(createdAt),y: wetball});
+                            dataPoints[2].dataPoints.push({x: new Date(createdAt),y: high_speed});
+                            dataPoints[3].dataPoints.push({x: new Date(createdAt),y: low_speed});
+                            dataPoints[4].dataPoints.push({x: new Date(createdAt),y: wind_door_status});
+                            dataPoints[5].dataPoints.push({x: new Date(createdAt),y: combustion_fan_status});
+                        }
+                    } 
+                    console.log(dataPoints);
                     var chart = new CanvasJS.Chart("chartContainer", {
                         culture: "es",
                         zoomEnabled:true,
                         animationEnabled: true,
+                        exportEnabled: true,
                         axisX: {
-                            gridColor: "Silver",
-                            tickColor: "silver",
                             interval: 1,
                             intervalType: "day",
+                            labelFontSize: 5,
                             valueFormatString: "MM-DD",
                             labelAngle: -50,
                             minimum : StartDateTime,
@@ -97,220 +348,20 @@
                             tickColor: "silver",
                 
                         },
-                        legend: {
-                            verticalAlign: "center",
-                            horizontalAlign: "right"
-                        },
                         data: dataPoints,
                         legend: {
-                            /*cursor: "pointer",
-                            itemclick: function(e) {
-                                if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                                    e.dataSeries.visible = false;
-                                } else {
-                                    e.dataSeries.visible = true;
-                                }
-                                chart.render();
-                            }*/
+                            cursor:"pointer",
+                            itemclick:function(e){
+                              if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                                e.dataSeries.visible = false;
+                              }
+                              else {
+                                e.dataSeries.visible = true;            
+                              }
+                              chart.render();
+                            }
                         }
-                    });
-                    //var dryPoints = [];
-                    //var wetPoints = [];
-                    //var windPoints = [];
-                    //var hSpeedPoints = [];
-                    //var lSpeedPoints = [];
-//                    console.log(data[5524]);
-//                    console.log(data.length);
-//                    for (var i = 0; i < data.length; i++) {
-//                        if (i > 5500) {
-//                            console.log(data[i].createdAt)
-//                        }
-//                    }
-                    var lastdate=0;
-                    var lLine=0
-                    for (var i = 0; i < data.length; i ++) {
-                        var s = data[i].alarm;
-                        var ss = data[i].normal;
-                        var alarm = s.split(",");
-                        var normal = ss.split(",");
-                        var wetball = (parseFloat(alarm[6]) * 256 + parseFloat(alarm[7])) / 10;
-                        var dryball = (parseFloat(alarm[4]) * 256 + parseFloat(alarm[5])) / 10;
-                        var wind_door_status = getBits(normal[10], 0);
-                        var combustion_fan_status = getBits(normal[10], 2);
-                        var high_speed = getBits(normal[10], 6);
-                        var low_speed = getBits(normal[10], 7);
-                        var dateTime = data[i].createdAt.split('.')[0];
-                        var date = dateTime.split('T')[0];
-                        var time = dateTime.split('T')[1];
-                        var object = {
-                            createdAt: data[i].createdAt.split('.')[0],
-                            dry: dryball,
-                            wet: wetball
-                        };
-                        var createdAt = (new Date(date.split('-')[0], date.split('-')[1] - 1, date.split('-')[2], time.split(':')[0], time.split(':')[1] - 1, time.split(':')[2])).getTime();
-                        if (dryball<1 || dryball>=80 || wetball<1 || wetball>=80)
-                        {
-                          continue;
-                        }
-                        if (lastdate==0)
-                        {
-                          console.log(dryball);
-                          console.log(wetball);
-                          lastdate=createdAt;
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: true,
-                            lineThickness: 2,
-                            markerSize: 1,
-                            name: "干球实际温度",
-                            markerType: "square",
-                            color: "#F08080",
-                            valueFormatString: "YYYY-MM-DD:HH:mm:ss",
-                            dataPoints: []
-                          });
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: true,
-                            name: "湿球实际温度",
-                            color: "#20B2AA",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: true,
-                            name: "循环风机高速",
-                            color: "#CD8C95",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: true,
-                            name: "循环风机低速",
-                            color: "#EEEE00",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: true,
-                            name: "风门状态",
-                            color: "#CD2626",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: true,
-                            name: "助燃风机状态",
-                            color: "#AAAAAA",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                        }
-                        if (createdAt-lastdate>30000)
-                        {
-                          lLine++;
-                          //console.log(createdAt);
-                          //console.log(lastdate);
-                          lastdate=createdAt;
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: false,
-                            lineThickness: 2,
-                            markerSize: 1,
-                            name: "干球实际温度",
-                            markerType: "square",
-                            color: "#F08080",
-                            valueFormatString: "YYYY-MM-DD:HH:mm:ss",
-                            dataPoints: []
-                          });
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: false,
-                            name: "湿球实际温度",
-                            color: "#20B2AA",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                         dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: false,
-                            name: "循环风机高速",
-                            color: "#CD8C95",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: false,
-                            name: "循环风机低速",
-                            color: "#EEEE00",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                          dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: false,
-                            name: "风门状态",
-                            color: "#CD2626",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                           dataPoints.push({
-                            type: "line",
-                            visible: true,
-                            showInLegend: false,
-                            name: "助燃风机状态",
-                            color: "#AAAAAA",
-                            lineThickness: 2,
-                            markerSize: 1,
-                            xValueType: "dateTime",
-                            dataPoints: []
-                          });
-                        }
-                        dataPoints[lLine*6].dataPoints.push({x: createdAt,y: dryball});
-                        dataPoints[lLine*6+1].dataPoints.push({x: createdAt,y: wetball});
-                        dataPoints[lLine*6+2].dataPoints.push({x: createdAt,y: high_speed});
-                        dataPoints[lLine*6+3].dataPoints.push({x: createdAt,y: low_speed});
-                        dataPoints[lLine*6+4].dataPoints.push({x: createdAt,y: wind_door_status});
-                        dataPoints[lLine*6+5].dataPoints.push({x: createdAt,y: combustion_fan_status});
-                    } 
-                    //dataPoints[0].dataPoints=dryPoints;
-                    //dataPoints[1].dataPoints=wetPoints;
-                    //dataPoints[2].dataPoints=windPoints;
-                    //dataPoints[3].dataPoints=hSpeedPoints;
-                    //dataPoints[4].dataPoints=lSpeedPoints;
+                    }); 
                     chart.render();
                 }
             })
