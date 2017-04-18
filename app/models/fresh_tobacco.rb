@@ -21,9 +21,9 @@ class FreshTobacco < ActiveRecord::Base
 	accepts_nested_attributes_for :fresh_details, allow_destroy: true
   accepts_nested_attributes_for :fresh_images, allow_destroy: true
 	
-  # has_attached_file :image, styles: { medium: "800x600>", thumb: "80x60>" }, default_url: "/images/:style/missing.png"
+  has_attached_file :image, styles: { medium: "800x600>", thumb: "80x60>" }, default_url: "/images/:style/missing.png"
 
-  # validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
+  validates_attachment_content_type :image, content_type: /\Aimage\/.*\Z/
   
   include DataUtils
 end

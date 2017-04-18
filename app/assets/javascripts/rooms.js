@@ -6,116 +6,7 @@
         format: 'yyyy-mm-dd'
     });
 
-
-    var dry_standard_line = [36,38,40,42,46,48,50,54,60,68];
-    var wet_standard_line = [34,36,37,37.5,38,38,39,39,40,42];
-    var time_standard = [2,2,15,4,2,4,2,8,4,4,2,4,2,5,5,6,2,8,12];
-
-    var chart2 = new CanvasJS.Chart("chartContainer2",{
-        culture: "es",
-        zoomEnabled:true,
-        animationEnabled: true,
-        exportEnabled: true,
-        title:{
-            text: "干湿球温度目标曲线",
-            fontSize: 20
-        },    
-        axisX:{
-            title: "时间线",
-            valueFormatString: "HH",
-            lineThickness: 1,
-            lineColor: "black",
-            labelFontColor: "black",
-            titleFontColor: "black"
-        },    
-        axisY:{ 
-            title: "温度",
-            includeZero: false,
-            suffix : "摄氏度",
-            lineColor: "#369EAD",
-            minimum : 30,
-            maximum : 70       
-        },
-        axisY2:{ 
-            title: "温度",
-            includeZero: false,
-            suffix : "摄氏度",
-            lineColor: "#C24642",
-            minimum : 30,
-            maximum : 70
-        },
-        legend: {
-            cursor:"pointer",
-            verticalAlign: "top",
-            fontSize: 14,
-            dockInsidePlotArea: true,
-            verticalAlign: "top",
-            itemclick:function(e){
-              if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                e.dataSeries.visible = false;
-              }
-              else {
-                e.dataSeries.visible = true;            
-              }
-              chart2.render();
-            }
-        },
-        data: [{
-            type: "line",
-            showInLegend: true,
-            name:"干球目标曲线",
-            dataPoints: [
-                { x: new Date(0 - 8*3600000), y: 36 },
-                { x: new Date(2 * 3600000 - 8*3600000), y: 36 },
-                { x: new Date(4 * 3600000 - 8*3600000), y: 38 },
-                { x: new Date(19 * 3600000 - 8*3600000), y: 38 },
-                { x: new Date(23 * 3600000 - 8*3600000), y: 40 },
-                { x: new Date(25 * 3600000 - 8*3600000), y: 40 },
-                { x: new Date(29 * 3600000 - 8*3600000), y: 42 },
-                { x: new Date(31 * 3600000 - 8*3600000), y: 42 },
-                { x: new Date(39 * 3600000 - 8*3600000), y: 46 },
-                { x: new Date(43 * 3600000 - 8*3600000), y: 46 },
-                { x: new Date(47 * 3600000 - 8*3600000), y: 48 },
-                { x: new Date(49 * 3600000 - 8*3600000), y: 48 },
-                { x: new Date(53 * 3600000 - 8*3600000), y: 50 },
-                { x: new Date(55 * 3600000 - 8*3600000), y: 50 },
-                { x: new Date(60 * 3600000 - 8*3600000), y: 54 },
-                { x: new Date(65 * 3600000 - 8*3600000), y: 54 },
-                { x: new Date(71 * 3600000 - 8*3600000), y: 60 },
-                { x: new Date(73 * 3600000 - 8*3600000), y: 60 },
-                { x: new Date(81 * 3600000 - 8*3600000), y: 68 },
-                { x: new Date(93 * 3600000 - 8*3600000), y: 68 }
-            ]
-        },{
-            type: "line",
-            showInLegend: true,
-            name:"湿球目标曲线",
-            axisYType:"secondary",
-            dataPoints: [
-                { x: new Date(0 - 8*3600000), y: 34 },
-                { x: new Date(2 * 3600000 - 8*3600000), y: 34 },
-                { x: new Date(4 * 3600000 - 8*3600000), y: 36 },
-                { x: new Date(19 * 3600000 - 8*3600000), y: 36 },
-                { x: new Date(23 * 3600000 - 8*3600000), y: 37 },
-                { x: new Date(25 * 3600000 - 8*3600000), y: 37 },
-                { x: new Date(29 * 3600000 - 8*3600000), y: 37.5 },
-                { x: new Date(31 * 3600000 - 8*3600000), y: 37.5 },
-                { x: new Date(39 * 3600000 - 8*3600000), y: 38 },
-                { x: new Date(43 * 3600000 - 8*3600000), y: 38 },
-                { x: new Date(47 * 3600000 - 8*3600000), y: 38 },
-                { x: new Date(49 * 3600000 - 8*3600000), y: 38 },
-                { x: new Date(53 * 3600000 - 8*3600000), y: 39 },
-                { x: new Date(55 * 3600000 - 8*3600000), y: 39 },
-                { x: new Date(60 * 3600000 - 8*3600000), y: 39 },
-                { x: new Date(65 * 3600000 - 8*3600000), y: 39 },
-                { x: new Date(71 * 3600000 - 8*3600000), y: 40 },
-                { x: new Date(73 * 3600000 - 8*3600000), y: 40 },
-                { x: new Date(81 * 3600000 - 8*3600000), y: 42 },
-                { x: new Date(93 * 3600000 - 8*3600000), y: 42 }
-            ]
-        }]
-    });
-    chart2.render();
+    
     
     
     $.ajax({
@@ -130,7 +21,10 @@
     });
 
     $("#search_btn").click(function() {
-        
+        //清楚上一次的元素
+        $(".line").find("#room_line").remove();
+        $("#date_range").remove();
+        $(".standard_line").remove();
         //获取烤房号
         var addresses = $("#addresses").val();
         
@@ -157,7 +51,7 @@
             });
             
             //新建曲线区域
-            $(".line").append('<div class="row"><div class="col-md-12"><div id="chartContainer" style="height: 400px; width: 100%;"></div></div></div>');
+            $(".line").append('<div class="row" id="room_line"><div class="col-md-12"><div id="chartContainer" style="height: 400px; width: 100%;"></div></div></div>');
             
             //拼接url字符串
             var url = "http://120.25.101.68:8081/stations/" + stations + "/addresses/" + addresses + "/status?startTime=" + protocolStartDate + "&endTime=" + protocolEndDate;
@@ -171,8 +65,13 @@
                     console.log(data);
 
                     //建立可视化日期范围区域
-                    var opt = "<div class='col-md-12' style='height:50px;'><span>开始日期:" + protocolStartDate + "</span><span>结束日期:" + protocolEndDate + "</span></div>";
+                    var opt = "<div id='date_range' class='col-md-12' style='height:50px;'><span>开始日期:" + protocolStartDate + "</span><span>结束日期:" + protocolEndDate + "</span></div>";
                     $(".date-info").html(opt);
+
+                    //建立目标曲线区域
+                    var opt2 = '<div class="row standard_line"><div id="chartContainer2" style="height: 400px; width: 100%;"></div></div>';
+                    $(".content").append(opt2);
+
 
                     //remove等待提示框
                     $("#searchModal").modal('toggle');
@@ -351,6 +250,71 @@
                         data: dataPoints,
                         legend: {
                             cursor:"pointer",
+                            fontSize: 14,
+                            dockInsidePlotArea: true,
+                            itemclick:function(e){
+                                var count = 0;
+                                for(var i=0;i<6;i++){
+                                    if(chart.options.data[i].visible == true){
+                                        count += 1;
+                                    }
+                                }
+                                if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                                    if(count > 1){
+                                        e.dataSeries.visible = false; 
+                                    }
+                                }
+                                else {
+                                    e.dataSeries.visible = true;            
+                                }
+                                
+                                
+                                chart.render();
+                            }
+                        }
+                    }); 
+                    chart.render();
+
+                    console.log($("#addresses").val())
+                    var chart2 = new CanvasJS.Chart("chartContainer2",{
+                        culture: "es",
+                        zoomEnabled:true,
+                        animationEnabled: true,
+                        exportEnabled: true,
+                        title:{
+                            text: $("#addresses").val()+"号烤房目标曲线",
+                            fontSize: 20
+                        },    
+                        axisX:{
+                            title: "时间线",
+                            valueFormatString: "HH",
+                            lineThickness: 1,
+                            lineColor: "black",
+                            labelFontColor: "black",
+                            titleFontColor: "black"
+                        },    
+                        axisY:{ 
+                            title: "温度",
+                            includeZero: false,
+                            suffix : "摄氏度",
+                            lineColor: "#369EAD",
+                            minimum : 30,
+                            maximum : 70       
+                        },
+                        axisY2:{ 
+                            title: "温度",
+                            includeZero: false,
+                            suffix : "摄氏度",
+                            lineColor: "#C24642",
+                            minimum : 30,
+                            maximum : 70
+                        },
+                        legend: {
+                            cursor:"pointer",
+                            verticalAlign: "top",
+                            fontSize: 14,
+                            dockInsidePlotArea: true,
+                            verticalAlign: "top",
                             itemclick:function(e){
                               if(typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
                                 e.dataSeries.visible = false;
@@ -358,11 +322,65 @@
                               else {
                                 e.dataSeries.visible = true;            
                               }
-                              chart.render();
+                              chart2.render();
                             }
-                        }
-                    }); 
-                    chart.render();
+                        },
+                        data: [{
+                            type: "line",
+                            showInLegend: true,
+                            name:"干球目标曲线",
+                            dataPoints: [
+                                { x: new Date(0 - 8*3600000), y: 36 },
+                                { x: new Date(2 * 3600000 - 8*3600000), y: 36 },
+                                { x: new Date(4 * 3600000 - 8*3600000), y: 38 },
+                                { x: new Date(19 * 3600000 - 8*3600000), y: 38 },
+                                { x: new Date(23 * 3600000 - 8*3600000), y: 40 },
+                                { x: new Date(25 * 3600000 - 8*3600000), y: 40 },
+                                { x: new Date(29 * 3600000 - 8*3600000), y: 42 },
+                                { x: new Date(31 * 3600000 - 8*3600000), y: 42 },
+                                { x: new Date(39 * 3600000 - 8*3600000), y: 46 },
+                                { x: new Date(43 * 3600000 - 8*3600000), y: 46 },
+                                { x: new Date(47 * 3600000 - 8*3600000), y: 48 },
+                                { x: new Date(49 * 3600000 - 8*3600000), y: 48 },
+                                { x: new Date(53 * 3600000 - 8*3600000), y: 50 },
+                                { x: new Date(55 * 3600000 - 8*3600000), y: 50 },
+                                { x: new Date(60 * 3600000 - 8*3600000), y: 54 },
+                                { x: new Date(65 * 3600000 - 8*3600000), y: 54 },
+                                { x: new Date(71 * 3600000 - 8*3600000), y: 60 },
+                                { x: new Date(73 * 3600000 - 8*3600000), y: 60 },
+                                { x: new Date(81 * 3600000 - 8*3600000), y: 68 },
+                                { x: new Date(93 * 3600000 - 8*3600000), y: 68 }
+                            ]
+                        },{
+                            type: "line",
+                            showInLegend: true,
+                            name:"湿球目标曲线",
+                            axisYType:"secondary",
+                            dataPoints: [
+                                { x: new Date(0 - 8*3600000), y: 34 },
+                                { x: new Date(2 * 3600000 - 8*3600000), y: 34 },
+                                { x: new Date(4 * 3600000 - 8*3600000), y: 36 },
+                                { x: new Date(19 * 3600000 - 8*3600000), y: 36 },
+                                { x: new Date(23 * 3600000 - 8*3600000), y: 37 },
+                                { x: new Date(25 * 3600000 - 8*3600000), y: 37 },
+                                { x: new Date(29 * 3600000 - 8*3600000), y: 37.5 },
+                                { x: new Date(31 * 3600000 - 8*3600000), y: 37.5 },
+                                { x: new Date(39 * 3600000 - 8*3600000), y: 38 },
+                                { x: new Date(43 * 3600000 - 8*3600000), y: 38 },
+                                { x: new Date(47 * 3600000 - 8*3600000), y: 38 },
+                                { x: new Date(49 * 3600000 - 8*3600000), y: 38 },
+                                { x: new Date(53 * 3600000 - 8*3600000), y: 39 },
+                                { x: new Date(55 * 3600000 - 8*3600000), y: 39 },
+                                { x: new Date(60 * 3600000 - 8*3600000), y: 39 },
+                                { x: new Date(65 * 3600000 - 8*3600000), y: 39 },
+                                { x: new Date(71 * 3600000 - 8*3600000), y: 40 },
+                                { x: new Date(73 * 3600000 - 8*3600000), y: 40 },
+                                { x: new Date(81 * 3600000 - 8*3600000), y: 42 },
+                                { x: new Date(93 * 3600000 - 8*3600000), y: 42 }
+                            ]
+                        }]
+                    });
+                    chart2.render();
                 }
             })
         }
