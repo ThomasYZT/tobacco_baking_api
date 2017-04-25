@@ -32,6 +32,9 @@
 	})
 })()
 
+/*
+ * 烤房数据统计
+ */
 function room_analysis(e,room_no,detail_code){
 	var data = {
 		station_code:detail_code,
@@ -104,7 +107,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[0]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[0].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -139,7 +142,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[1]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[1].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -174,7 +177,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[2]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[2].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -209,7 +212,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[3]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[3].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -244,7 +247,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[4]){
-			        		return '<img src="#" alt="" />';
+			        		return'<button class="img">查看<span style="display:none;">'+data[4].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -279,12 +282,37 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[5]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[5].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
 			        }}       
-			      ]
+			      ],
+			      initComplete: function(data) {
+			      	$(".img").on('click',function(){
+			      		var d_id = $(this).find('span').text();
+			      		$.ajax({
+			      			type:"get",
+							url:"/dry_detail/"+detail_code,
+							dataType:'json',
+							data:{
+								d_id: d_id
+							},
+							success:function(data){
+								console.log(data)
+								var a_hrefs = $("#Modal").find("a");
+								var imgs = $("#Modal").find("img");
+								var images = data.images;
+								for(var i=0;i<imgs.length;i++){
+									$(imgs[i]).attr("src","http://120.25.101.68:9090/"+images[i].files+"/"+images[i].image_file_name)
+									$(a_hrefs[i]).attr("href","http://120.25.101.68:9090/"+images[i].files+"/"+images[i].image_file_name)
+								}
+								$("#Modal").modal('toggle');
+							}
+			      		})
+		        		
+		        	});
+			      }
 				});
 			}
 		});
@@ -471,8 +499,13 @@ function room_analysis(e,room_no,detail_code){
 	}
 }
 
+/*
+ * 市县级表格数据统计
+ */
 function initData(data){
-	//定义统计数据
+			/*
+			 * 定义统计数据
+			 */
 			var breed_sum = 0;  //干烟总量
 			var breed_statistic = [];  //品种统计数据
 			var quality_statistic = [];  //品质统计数据
@@ -480,7 +513,9 @@ function initData(data){
 			var tTrolleys_data = [];  //表格数据
 			var tTrolleys2_data = [];  //表格数据
 
-			//按烟品种统计数据
+			/*
+			 * 按烟品种统计数据
+			 */
 			for(var i=0; i<data.by_breed.length; i++){
 				var map = {};
 				map.name = data.by_breed[i].breed;
@@ -490,6 +525,7 @@ function initData(data){
 			}
 			breed_statistic[0].sliced = true;
 			breed_statistic[0].selected = true;
+
 			//按部位统计数据
 			for(var i=0;i<data.by_part.length;i++){
 				var map = {};
@@ -520,15 +556,17 @@ function initData(data){
 			}
 			quality_statistic[0].sliced = true;
 			quality_statistic[0].selected = true;
+
 			//初始化统计图表
 			initChart( breed_sum, breed_statistic, part_statistic, quality_statistic );
+
 			//表格数据统计
 			for(var i=0;i<data.by_breed.length;i++){
 				var map = {};
 				map.breed = data.by_breed[i].breed;
 				map.weight_sum = parseInt(data.by_breed[i].sum);
 				tTrolleys_data.push(map);
-				$(".breed_tr").append("<th>"+data.by_breed[i].breed+"</th>");
+				$(".breed_tr").append("<th>"+breed_statistic[i].name+"</th>");
 			}
 
 			for(var i=0;i<data.by_part.length;i++){
@@ -558,18 +596,18 @@ function initData(data){
 
 				for(var i=0;i<data.by_breed_part.length;i++){
 					if(data.by_breed_part[i].breed == tTrolleys_data[j].breed){
-						if(data.by_breed_part[i].part == "上部叶"){
+						if($.trim(data.by_breed_part[i].part) == "上部叶"){
 							tTrolleys_data[j].up_leaf_sum = data.by_breed_part[i].sum;
-						}else if(data.by_breed_part[i].part == "中部叶"){
+						}else if($.trim(data.by_breed_part[i].part) == "中部叶"){
 							tTrolleys_data[j].middle_leaf_sum = data.by_breed_part[i].sum;
-						}else if(data.by_breed_part[i].part == "下部叶"){
+						}else if($.trim(data.by_breed_part[i].part) == "下部叶"){
 							tTrolleys_data[j].down_leaf_sum = data.by_breed_part[i].sum;
 						}
 					}
 				}
 
 			}
-
+			console.log(tTrolleys_data)
 			//tTrolleys2表格数据总计
 			for(var j=0;j<tTrolleys2_data.length;j++){
 				for(var i=0; i<data.by_part_quality.length; i++){
@@ -663,49 +701,9 @@ function initData(data){
 	          ]
 			});
 			
-			$("#tTrolleys2").DataTable({
-			  paging: false,//分页
-		      ordering: false,//是否启用排序
-		      searching: false,//搜索
-		      language: {
-		        search: '',//右上角的搜索文本，可以写html标签
-		        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
-		        //下面三者构成了总体的左下角的内容。
-		        info: "",//左下角的信息显示，大写的词为关键字。
-		        infoEmpty: "",//筛选为空时左下角的显示。
-		        infoFiltered: ""//筛选之后的左下角筛选提示，
-		      },
-		      pagingType: "full_numbers",//分页样式的类型
-		      data:tTrolleys2_data,
-		      columns:[
-	            {data:'part'},
-	            {data:'weight_sum'},
-	            {data:'zz',render:function(data,type,full){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'q',render:function(data,type,row){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'zs',render:function(data,type,row){
-	                if(data){
-	            		return parseFloat(data).toFixed(2);
-	            	}else{
-	            		return "0";
-	            	}
-	            }},
-	            {data:'breed',render:function(data,type,full){
-	                return data[0].sum
-	            }}
-	          ]
-			});
+			console.log(tTrolleys2_data)
+			initTable2(tTrolleys2_data);
+			
 }
 
 function initChart( breed_sum, breed_statistic, part_statistic, quality_statistic ){
@@ -784,4 +782,227 @@ function initChart( breed_sum, breed_statistic, part_statistic, quality_statisti
             data: quality_statistic
         }]
     });
+}
+
+function initTable2(tTrolleys2_data) {
+	if(tTrolleys2_data[0].breed.length == 1){
+		$("#tTrolleys2").DataTable({
+		  paging: false,//分页
+	      ordering: false,//是否启用排序
+	      searching: false,//搜索
+	      language: {
+	        search: '',//右上角的搜索文本，可以写html标签
+	        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
+	        //下面三者构成了总体的左下角的内容。
+	        info: "",//左下角的信息显示，大写的词为关键字。
+	        infoEmpty: "",//筛选为空时左下角的显示。
+	        infoFiltered: ""//筛选之后的左下角筛选提示，
+	      },
+	      pagingType: "full_numbers",//分页样式的类型
+	      data:tTrolleys2_data,
+	      columns:[
+	        {data:'part'},
+	        {data:'weight_sum'},
+	        {data:'zz',render:function(data,type,full){
+	            if(data){
+	        		return parseFloat(data).toFixed(2);
+	        	}else{
+	        		return "0";
+	        	}
+	        }},
+	        {data:'q',render:function(data,type,row){
+	            if(data){
+	        		return parseFloat(data).toFixed(2);
+	        	}else{
+	        		return "0";
+	        	}
+	        }},
+	        {data:'zs',render:function(data,type,row){
+	            if(data){
+	        		return parseFloat(data).toFixed(2);
+	        	}else{
+	        		return "0";
+	        	}
+	        }},
+	        {data:'breed',render:function(data,type,full){
+	            return data[0].sum
+	        }}
+	      ]
+		});
+	}else if(tTrolleys2_data[0].breed.length == 2){
+		$("#tTrolleys2").DataTable({
+		  	paging: false,//分页
+	      	ordering: false,//是否启用排序
+	      	searching: false,//搜索
+	      	language: {
+	        	search: '',//右上角的搜索文本，可以写html标签
+	        	zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
+	        	//下面三者构成了总体的左下角的内容。
+	        	info: "",//左下角的信息显示，大写的词为关键字。
+	        	infoEmpty: "",//筛选为空时左下角的显示。
+	        	infoFiltered: ""//筛选之后的左下角筛选提示，
+	      	},
+			pagingType: "full_numbers",//分页样式的类型
+			data:tTrolleys2_data,
+	        columns:[
+	        	{data:'part'},
+	        	{data:'weight_sum'},
+	        	{data:'zz',render:function(data,type,full){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'q',render:function(data,type,row){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'zs',render:function(data,type,row){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	return data[0].sum
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	if(data[1]){
+		        		return data[1].sum
+		        	}else{
+		        		return "";
+		        	}
+	        	}}
+	     	]
+		});
+	}else if(tTrolleys2_data[0].breed.length == 3){
+		$("#tTrolleys2").DataTable({
+		  	paging: false,//分页
+	      	ordering: false,//是否启用排序
+	      	searching: false,//搜索
+	      	language: {
+	        	search: '',//右上角的搜索文本，可以写html标签
+	        	zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
+	        	//下面三者构成了总体的左下角的内容。
+	        	info: "",//左下角的信息显示，大写的词为关键字。
+	        	infoEmpty: "",//筛选为空时左下角的显示。
+	        	infoFiltered: ""//筛选之后的左下角筛选提示，
+	      	},
+			pagingType: "full_numbers",//分页样式的类型
+			data:tTrolleys2_data,
+	        columns:[
+	        	{data:'part'},
+	        	{data:'weight_sum'},
+	        	{data:'zz',render:function(data,type,full){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'q',render:function(data,type,row){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'zs',render:function(data,type,row){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	return data[0].sum
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	if(data[1]){
+		        		return data[1].sum
+		        	}else{
+		        		return "";
+		        	}
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	if(data[2]){
+		        		return data[2].sum
+		        	}else{
+		        		return "";
+		        	}
+	        	}}
+	     	]
+		});
+	}else if(tTrolleys2_data[0].breed.length == 4){
+		$("#tTrolleys2").DataTable({
+		  	paging: false,//分页
+	      	ordering: false,//是否启用排序
+	      	searching: false,//搜索
+	      	language: {
+	        	search: '',//右上角的搜索文本，可以写html标签
+	        	zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
+	        	//下面三者构成了总体的左下角的内容。
+	        	info: "",//左下角的信息显示，大写的词为关键字。
+	        	infoEmpty: "",//筛选为空时左下角的显示。
+	        	infoFiltered: ""//筛选之后的左下角筛选提示，
+	      	},
+			pagingType: "full_numbers",//分页样式的类型
+			data:tTrolleys2_data,
+	        columns:[
+	        	{data:'part'},
+	        	{data:'weight_sum'},
+	        	{data:'zz',render:function(data,type,full){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'q',render:function(data,type,row){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'zs',render:function(data,type,row){
+	            	if(data){
+	        			return parseFloat(data).toFixed(2);
+	        		}else{
+	        			return "0";
+	        		}
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	return data[0].sum
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	if(data[1]){
+		        		return data[1].sum
+		        	}else{
+		        		return "";
+		        	}
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	if(data[2]){
+		        		return data[2].sum
+		        	}else{
+		        		return "";
+		        	}
+	        	}},
+	        	{data:'breed',render:function(data,type,full){
+	            	if(data[3]){
+		        		return data[3].sum
+		        	}else{
+		        		return "";
+		        	}
+	        	}}
+	     	]
+		});
+	}
+	
 }

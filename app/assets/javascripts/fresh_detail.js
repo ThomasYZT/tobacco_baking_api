@@ -57,13 +57,23 @@ function room_analysis(e,room_no,detail_code){
 						}
 					}
 				}
+				var maturity_data = [[data.maturity[0]]];
+				for(var i=1; i<data.maturity.length; i++){
+					if(data.maturity[i].room_no == maturity_data[maturity_data.length-1][maturity_data[maturity_data.length-1].length-1].room_no){
+						maturity_data[maturity_data.length-1].push(data.maturity[i]);
+					}else{
+						maturity_data.push([data.maturity[i]])
+					}
+					
+				}
+				console.log(maturity_data)
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>鲜烟总量</th><th>适熟烟叶</th><th>欠熟烟叶</th><th>过熟烟叶</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="6">第一烤</th><th colspan="6">第二烤</th><th colspan="6">第三烤</th><th colspan="6">第四烤</th><th colspan="6">第五烤</th><th colspan="6">第六烤</th></tr><tr><th>鲜烟总量</th><th>烟农</th><th>时间</th><th>适熟</th><th>过熟</th><th>欠熟</th><th>鲜烟总量</th><th>烟农</th><th>时间</th><th>适熟</th><th>过熟</th><th>欠熟</th><th>鲜烟总量</th><th>烟农</th><th>时间</th><th>适熟</th><th>过熟</th><th>欠熟</th><th>鲜烟总量</th><th>烟农</th><th>时间</th><th>适熟</th><th>过熟</th><th>欠熟</th><th>鲜烟总量</th><th>烟农</th><th>时间</th><th>适熟</th><th>过熟</th><th>欠熟</th><th>鲜烟总量</th><th>烟农</th><th>时间</th><th>适熟</th><th>过熟</th><th>欠熟</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
 			      searching: false,//搜索
+			      scrollX: true,
 			      language: {
 			        search: '',//右上角的搜索文本，可以写html标签
 			        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
@@ -72,13 +82,263 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:data.maturity,
+			      data:maturity_data,
 			      columns:[
-			        {data:'room_no'},
-			        {data:'fresh_sum'},
-			        {data:'weight_of_mature'},
-			        {data:'weight_of_immature'},
-			        {data:'weight_of_over_mature'}	 	        
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	return data[0].room_no;
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return parseFloat(data[0].weight_of_immature)+parseFloat(data[0].weight_of_mature)+parseFloat(data[0].weight_of_over_mature);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].work_started + " 至 " + data[0].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].weight_of_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].weight_of_over_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return data[0].weight_of_immature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return parseFloat(data[1].weight_of_immature)+parseFloat(data[1].weight_of_mature)+parseFloat(data[1].weight_of_over_mature);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].work_started + " 至 " + data[1].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].weight_of_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].weight_of_over_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return data[1].weight_of_immature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return parseFloat(data[2].weight_of_immature)+parseFloat(data[2].weight_of_mature)+parseFloat(data[2].weight_of_over_mature);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].work_started + " 至 " + data[2].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].weight_of_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].weight_of_over_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return data[2].weight_of_immature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return parseFloat(data[3].weight_of_immature)+parseFloat(data[3].weight_of_mature)+parseFloat(data[3].weight_of_over_mature);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].work_started + " 至 " + data[3].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].weight_of_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].weight_of_over_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return data[3].weight_of_immature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return parseFloat(data[4].weight_of_immature)+parseFloat(data[4].weight_of_mature)+parseFloat(data[4].weight_of_over_mature);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].work_started + " 至 " + data[4].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].weight_of_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].weight_of_over_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return data[4].weight_of_immature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return parseFloat(data[5].weight_of_immature)+parseFloat(data[5].weight_of_mature)+parseFloat(data[5].weight_of_over_mature);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].party_b;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].work_started + " 至 " + data[5].work_finished;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].weight_of_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].weight_of_over_mature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return data[5].weight_of_immature;
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
 			      ]
 				});
 			}
@@ -154,7 +414,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[0]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[0].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -189,7 +449,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[1]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[1].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -224,7 +484,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[2]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[2].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -259,7 +519,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[3]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[3].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -294,7 +554,7 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[4]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[4].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
@@ -329,12 +589,39 @@ function room_analysis(e,room_no,detail_code){
 			        }},
 			        {data:'[]',sWidth:"40px",render:function(data,index,row){
 			        	if(data[5]){
-			        		return '<img src="#" alt="" />';
+			        		return '<button class="img">查看<span style="display:none;">'+data[5].id+'</span></button>';
 			        	}else{
 			        		return " ";
 			        	}
 			        }},
-			      ]
+			      ],
+			      initComplete: function(data) {
+			      	$(".img").on('click',function(){
+			      		var f_id = $(this).find('span').text();
+			      		console.log(f_id);
+			      		$.ajax({
+			      			type:"get",
+							url:"/fresh_detail/"+detail_code,
+							dataType:'json',
+							data:{
+								f_id: f_id
+							},
+							success:function(data){
+								console.log(data);
+								var a_hrefs = $("#Modal").find("a");
+								var imgs = $("#Modal").find("img");
+								var images = data.images;
+								console.log(images)
+								for(var i=0;i<imgs.length;i++){
+									$(imgs[i]).attr("src","http://120.25.101.68:9090/"+images[i].files+"/"+images[i].image_file_name)
+									$(a_hrefs[i]).attr("href","http://120.25.101.68:9090/"+images[i].files+"/"+images[i].image_file_name)
+								}
+								$("#Modal").modal('toggle');
+							}
+			      		})
+		        		
+		        	});
+			      }
 				});
 			}
 
@@ -348,61 +635,24 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
-				var analysis_data = [];
-				var map = {};
-				map.room_no = data.type[0].room_no;
-				map.normal = 0;
-				map.greenup = 0;
-				map.aridity = 0;
-				if($.trim(data.type[0].tobacco_type) == "正常"){
-					map.normal = data.type[0].sum;
-				}else if($.trim(data.type[0].tobacco_type) == "返青"){
-					map.greenup = data.type[0].sum;
-				}else if($.trim(data.type[0].tobacco_type) == "干旱"){
-					map.aridity = data.type[0].sum;
-				}
-				analysis_data.push(map);
+
+				var type_data = [[data.type[0]]];
 				for(var i=1; i<data.type.length; i++){
-					var status = false;
-					var _x = null;
-					for(var j=0; j<analysis_data.length; j++){
-						if(data.type[i].room_no == analysis_data[j].room_no){
-							console.log(i)
-							status = true;
-							_x = j;
-						}
-					}
-					if(status){
-						if($.trim(data.type[i].tobacco_type) == "正常"){
-							analysis_data[_x].normal += data.type[i].sum;
-						}else if($.trim(data.type[i].tobacco_type) == "返青"){
-							analysis_data[_x].greenup += data.type[i].sum;
-						}else if($.trim(data.type[i].tobacco_type) == "干旱"){
-							analysis_data[_x].aridity += data.type[i].sum;
-						}
+					if(data.type[i].room_no == type_data[type_data.length-1][type_data[type_data.length-1].length-1].room_no){
+						type_data[type_data.length-1].push(data.type[i]);
 					}else{
-						var map = {};
-						map.room_no = data.type[i].room_no;
-						map.normal = 0;
-						map.greenup = 0;
-						map.aridity = 0;
-						if($.trim(data.type[i].tobacco_type) == "正常"){
-							map.normal = data.type[i].sum;
-						}else if($.trim(data.type[i].tobacco_type) == "返青"){
-							map.greenup = data.type[i].sum;
-						}else if($.trim(data.type[i].tobacco_type) == "干旱"){
-							map.aridity = data.type[i].sum;
-						}
-						analysis_data.push(map);
+						type_data.push([data.type[i]])
 					}
+					
 				}
-				console.log(analysis_data);
+				console.log(type_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">正常</th><th colspan="2">返青</th><th colspan="2">干旱</th></tr><tr><th>总重</th><th>占比</th><th>总重</th><th>占比</th><th>总重</th><th>占比</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="3">烤房编号</th><th colspan="6">第一烤</th><th colspan="6">第二烤</th><th colspan="6">第三烤</th><th colspan="6">第四烤</th><th colspan="6">第五烤</th><th colspan="6">第六烤</th></tr><tr><th colspan="2">正常</th><th colspan="2">返青</th><th colspan="2">干旱</th><th colspan="2">正常</th><th colspan="2">返青</th><th colspan="2">干旱</th><th colspan="2">正常</th><th colspan="2">返青</th><th colspan="2">干旱</th><th colspan="2">正常</th><th colspan="2">返青</th><th colspan="2">干旱</th><th colspan="2">正常</th><th colspan="2">返青</th><th colspan="2">干旱</th><th colspan="2">正常</th><th colspan="2">返青</th><th colspan="2">干旱</th></tr><tr><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
 			      searching: false,//搜索
+			      scrollX: true,
 			      language: {
 			        search: '',//右上角的搜索文本，可以写html标签
 			        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
@@ -411,33 +661,407 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:analysis_data,
+			      data:type_data,
 			      columns:[
-			        {data:'room_no'},
-			        {data:'normal',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	return data[0].room_no;
 			        }},
-			        {data:'normal',render:function(data,type,full){
-			        	var sum = full.normal+full.greenup+full.aridity;
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].tobacco_type) != "正常"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'greenup',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].tobacco_type) != "正常"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'greenup',render:function(data,type,full){
-			        	var sum = full.normal+full.greenup+full.aridity;
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].tobacco_type) != "返青"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'aridity',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].tobacco_type) != "返青"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'aridity',render:function(data,type,full){
-			        	var sum = full.normal+full.greenup+full.aridity;
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
-			        }}         
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].tobacco_type) != "干旱"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].tobacco_type) != "干旱"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].tobacco_type) != "正常"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].tobacco_type) != "正常"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].tobacco_type) != "返青"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].tobacco_type) != "返青"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].tobacco_type) != "干旱"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].tobacco_type) != "干旱"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].tobacco_type) != "正常"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].tobacco_type) != "正常"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].tobacco_type) != "返青"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].tobacco_type) != "返青"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].tobacco_type) != "干旱"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].tobacco_type) != "干旱"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].tobacco_type) != "正常"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].tobacco_type) != "正常"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].tobacco_type) != "返青"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].tobacco_type) != "返青"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].tobacco_type) != "干旱"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].tobacco_type) != "干旱"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].tobacco_type) != "正常"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].tobacco_type) != "正常"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].tobacco_type) != "返青"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].tobacco_type) != "返青"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].tobacco_type) != "干旱"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].tobacco_type) != "干旱"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].tobacco_type) != "正常"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].tobacco_type) != "正常"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].tobacco_type) != "返青"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].tobacco_type) != "返青"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].tobacco_type) != "干旱"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].tobacco_type) != "干旱"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
 			      ]
 				});
 			}
@@ -451,60 +1075,23 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
-				var analysis_data = [];
-				var map = {};
-				map.room_no = data.water_content[0].room_no;
-				map.middle = 0;
-				map.small = 0;
-				map.big = 0;
-				if($.trim(data.water_content[0].water_content) == "适中"){
-					map.middle = data.water_content[0].sum;
-				}else if($.trim(data.water_content[0].water_content) == "较小"){
-					map.small = data.water_content[0].sum;
-				}else if($.trim(data.water_content[0].water_content) == "较大"){
-					map.big = data.water_content[0].sum;
-				}
-				analysis_data.push(map);
+				var water_content_data = [[data.water_content[0]]];
 				for(var i=1; i<data.water_content.length; i++){
-					var status = false;
-					var _x = null;
-					for(var j=0; j<analysis_data.length; j++){
-						if(data.water_content[i].room_no == analysis_data[j].room_no){
-							status = true;
-							_x = j;
-						}
-					}
-					if(status){
-						if($.trim(data.water_content[i].water_content) == "适中"){
-							analysis_data[_x].middle += data.water_content[i].sum;
-						}else if($.trim(data.water_content[i].water_content) == "较小"){
-							analysis_data[_x].small += data.water_content[i].sum;
-						}else if($.trim(data.water_content[i].water_content) == "较大"){
-							analysis_data[_x].big += data.water_content[i].sum;
-						}
+					if(data.water_content[i].room_no == water_content_data[water_content_data.length-1][water_content_data[water_content_data.length-1].length-1].room_no){
+						water_content_data[water_content_data.length-1].push(data.water_content[i]);
 					}else{
-						var map = {};
-						map.room_no = data.water_content[i].room_no;
-						map.middle = 0;
-						map.small = 0;
-						map.big = 0;
-						if($.trim(data.water_content[i].water_content) == "适中"){
-							map.middle = data.water_content[i].sum;
-						}else if($.trim(data.water_content[i].water_content) == "较小"){
-							map.small = data.water_content[i].sum;
-						}else if($.trim(data.water_content[i].water_content) == "较大"){
-							map.big = data.water_content[i].sum;
-						}
-						analysis_data.push(map);
+						water_content_data.push([data.water_content[i]])
 					}
+					
 				}
-				console.log(analysis_data)
+				console.log(water_content_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="3">烤房编号</th><th colspan="6">含水量</th></tr><tr><th colspan="2">适中</th><th colspan="2">较小</th><th colspan="2">较大</th></tr><tr><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="3">烤房编号</th><th colspan="6">第一烤</th><th colspan="6">第二烤</th><th colspan="6">第三烤</th><th colspan="6">第四烤</th><th colspan="6">第五烤</th><th colspan="6">第六烤</th></tr><tr><th colspan="2">适中</th><th colspan="2">较小</th><th colspan="2">较大</th><th colspan="2">适中</th><th colspan="2">较小</th><th colspan="2">较大</th><th colspan="2">适中</th><th colspan="2">较小</th><th colspan="2">较大</th><th colspan="2">适中</th><th colspan="2">较小</th><th colspan="2">较大</th><th colspan="2">适中</th><th colspan="2">较小</th><th colspan="2">较大</th><th colspan="2">适中</th><th colspan="2">较小</th><th colspan="2">较大</th></tr><tr><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
 			      searching: false,//搜索
+			      scrollX: true,
 			      language: {
 			        search: '',//右上角的搜索文本，可以写html标签
 			        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
@@ -513,33 +1100,407 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:analysis_data,
+			      data:water_content_data,
 			      columns:[
-			        {data:'room_no'},
-			        {data:'middle',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	return data[0].room_no;
 			        }},
-			        {data:'middle',render:function(data,type,full){
-			        	var sum = full.middle+full.small+full.big;
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].water_content) != "适中"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'small',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].water_content) != "适中"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'small',render:function(data,type,full){
-			        	var sum = full.middle+full.small+full.big;
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].water_content) != "较小"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'big',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].water_content) != "较小"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'big',render:function(data,type,full){
-			        	var sum = full.middle+full.small+full.big;
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
-			        }}        
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].water_content) != "较大"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].water_content) != "较大"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].water_content) != "适中"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].water_content) != "适中"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].water_content) != "较小"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].water_content) != "较小"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].water_content) != "较大"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].water_content) != "较大"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].water_content) != "适中"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].water_content) != "适中"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].water_content) != "较小"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].water_content) != "较小"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].water_content) != "较大"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].water_content) != "较大"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].water_content) != "适中"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].water_content) != "适中"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].water_content) != "较小"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].water_content) != "较小"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].water_content) != "较大"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].water_content) != "较大"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].water_content) != "适中"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].water_content) != "适中"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].water_content) != "较小"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].water_content) != "较小"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].water_content) != "较大"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].water_content) != "较大"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].water_content) != "适中"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].water_content) != "适中"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].water_content) != "较小"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].water_content) != "较小"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].water_content) != "较大"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].water_content) != "较大"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
 			      ]
 				});
 			}

@@ -12,8 +12,8 @@ class SessionsController < ApplicationController
 	  station = @user.station
 	  session[:station_title] = station.title
 	  session[:station_id] = station.id
-
-	  redirect_to dashboard_path
+	  time = Time.new
+	  redirect_to dashboard_path(randomid: time)
 	end
   end
 

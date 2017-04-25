@@ -6,7 +6,10 @@ class PackingsController < ApplicationController
 		  #@packing_amount = Packing.find_by_sql ["select ci.title,SUM(packing_amount) from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id left join cities ci on ci.id = c.city_id where ci.code like ? group by ci.title","%"+session[:code].to_s+"%"]
 		  
 		  @packing_weight = StandardDatum.find_by_sql ['select sum(fresh_weight) from standard_data s where s.code like ?',"%"+session[:code].to_s+"%"]
-		  @packing_amount = StandardDatum.find_by_sql ['select sum(d_poles_per_room + d_poles_per_room + d_poles_per_room) from standard_data c where c.code like ?',"%"+session[:code].to_s+"%"] 
+		  #编烟杆数
+		  @packing_amount = StandardDatum.find_by_sql ['SELECT SUM(p.packing_amount) as sum FROM packings p LEFT JOIN fresh_tobaccos f ON f.task_id = P .task_id LEFT JOIN tasks T ON T . ID = P .task_id LEFT JOIN rooms r ON r. ID = T .room_id LEFT JOIN stations s ON s. ID = r.station_id LEFT JOIN counties C ON C . ID = s.county_id WHERE s.code like ? ',"%"+session[:code].to_s+"%"] 
+		  #装烟房数
+		  @packing_rooms = Packing.find_by_sql ['select COUNT(*) as sum from (select distinct r.station_id,r.room_no from  tasks t left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id WHERE s.code like ? order by r.room_no )a;',"%"+session[:code].to_s+"%"]
 
 		  @by_category = Packing.find_by_sql ["select p.category,sum(p.packing_amount) as packing_sum from packings p left join tasks t on t.id = p.task_id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id left join cities ci on ci.id = c.city_id where ci.code like ? group by p.category","%"+session[:code].to_s+"%"]
 		  @by_uniformity = Packing.find_by_sql ["select p.uniformity,SUM(p.packing_amount) from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id left join cities ci on ci.id = c.city_id where ci.code like ? group by p.uniformity","%"+session[:code].to_s+"%"]
@@ -32,7 +35,8 @@ class PackingsController < ApplicationController
 		    	                         by_type_counties: @by_type_counties,
 		    	                         by_status_counties: @by_status_counties,
 		    	                         by_uniformity_counties: @by_uniformity_counties,
-		    	                         counties_code:@counties_code }}
+		    	                         counties_code:@counties_code,
+		    	                         packing_rooms:@packing_rooms }}
 		  end
 	  elsif session[:code].to_s.length == 4
 	  	  @counties_code = County.find_by_sql ["select * from counties c where c.code like ?","%"+session[:code].to_s+"%"]

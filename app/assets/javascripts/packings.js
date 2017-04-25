@@ -42,6 +42,11 @@
 			}
 
 			/*
+			 * 装烟房数
+			 */
+			packing_rooms = data.packing_rooms[0].sum;
+
+			/*
 			 * 分类编烟统计
 			 */
 			map = {};
@@ -320,7 +325,7 @@ function initChart(packing_weight, packing_sum, packing_category, packing_type, 
             	y:parseInt(packing_sum)
             },{
             	name:'装烟房数(房)',
-            	y:parseInt(packing_sum)
+            	y:parseInt(packing_rooms)
             }] 
         }]
     });

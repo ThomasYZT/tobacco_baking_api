@@ -6,7 +6,11 @@
     <title>烟草烘烤 | 管理系统</title>
     <%= csrf_meta_tags %>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  
+    
+    <meta http-equiv="Expires" CONTENT="0">  
+    <meta http-equiv="Cache-Control" CONTENT="no-cache">  
+    <meta http-equiv="Pragma" CONTENT="no-cache"> 
+
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -455,6 +459,10 @@
           dataType:'json',
           success:function(data){
             treeView(data);
+            var a_s = $('a');
+            for(var i=0;i<a_s.length;i++){
+              $(a_s[i]).attr({href:$(a_s[i]).attr('href')+"?randomId="+ new Date()});
+            }
           }
         })
       })
