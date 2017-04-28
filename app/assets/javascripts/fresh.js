@@ -704,6 +704,9 @@ function initChart( breed_sum, breed_statistic, part_statistic, maturity_statist
         title: {
             text: '鲜烟总量'  //指定图表标题
         },
+        axisY: {        
+	    	suffix: " kg"
+	    },
         credits: { enabled: false},
         xAxis: {
             categories: ['鲜烟总量']  //指定x轴分组
@@ -711,8 +714,14 @@ function initChart( breed_sum, breed_statistic, part_statistic, maturity_statist
         yAxis: {
             title: {
                 text: ''  //指定y轴的标题
+            },
+            labels: {
+             	formatter:function(){
+                	return this.value/1000+'t';
+             	}
             }
         },
+
         legend: {
         	enabled:false
         },

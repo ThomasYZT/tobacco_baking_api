@@ -184,9 +184,8 @@ function ajaxRequest(){
                          title: { text: '' },
                          labels: {
                          formatter:function(){
-                            
-                             return this.value+'kg';
-                           
+                            //return this.value+'kg';
+                            return '';
                          }
                         } 
                 }, 

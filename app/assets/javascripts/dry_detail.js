@@ -335,7 +335,7 @@ function room_analysis(e,room_no,detail_code){
 					}
 				}
 
-				
+
 
 				console.log(part_data);
 				$("#room_details").remove();
@@ -1060,6 +1060,11 @@ function initChart( breed_sum, breed_statistic, part_statistic, quality_statisti
         yAxis: {
             title: {
                 text: ''  //指定y轴的标题
+            },
+            labels: {
+             	formatter:function(){
+                	return this.value/1000+'t';
+             	}
             }
         },
         legend: {

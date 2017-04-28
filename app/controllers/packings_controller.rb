@@ -45,7 +45,9 @@ class PackingsController < ApplicationController
 		  @packing_weight = StandardDatum.find_by_sql ['select sum(fresh_weight) from standard_data s where s.code like ?',"%"+session[:code].to_s+"%"]
 		  #@packing_amount = Packing.find_by_sql ["select c.title,SUM(packing_amount) from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where c.code like ? group by c.title","%"+session[:code].to_s+"%"]
 		  @packing_amount = StandardDatum.find_by_sql ['select sum(d_poles_per_room + d_poles_per_room + d_poles_per_room) from standard_data c where c.code like ?',"%"+session[:code].to_s+"%"] 
-		  
+		  #烤房状态
+		  @packing_rooms = Packing.find_by_sql ['select COUNT(*) as sum from (select distinct r.station_id,r.room_no from  tasks t left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id WHERE s.code like ? order by r.room_no )a;',"%"+session[:code].to_s+"%"]
+
 		  @by_category = Packing.find_by_sql ["select p.category,sum(p.packing_amount) as packing_sum from packings p left join tasks t on t.id = p.task_id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where c.code like ? group by p.category","%"+session[:code].to_s+"%"]
 		  @by_uniformity = Packing.find_by_sql ["select p.uniformity,SUM(cast(p.average_weight as float) * p.packing_amount) from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where c.code like ? group by p.uniformity","%"+session[:code].to_s+"%"]
 		  @by_packing_type = Packing.find_by_sql ["select p.packing_type,SUM(p.packing_amount) from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where c.code like ? group by p.packing_type","%"+session[:code].to_s+"%"]
@@ -71,11 +73,15 @@ class PackingsController < ApplicationController
 		    	                         by_status_counties: @by_status_counties,
 		    	                         by_uniformity_counties: @by_uniformity_counties,
 		    	                         counties_code:@counties_code,
-		    	                         city_name: @city_name }}
+		    	                         city_name: @city_name,
+		    	                         packing_rooms:@packing_rooms  }}
 		  end
 	  elsif session[:code].to_s.length == 6
 	  	  @packing_weight= Packing.find_by_sql ["select s.title,SUM(pd.weight) from packing_details pd left join packings p on p.id = pd.packing_id left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where s.code like ? group by s.title","%"+session[:code].to_s+"%"]
 		  @packing_amount = Packing.find_by_sql ["select s.title,SUM(packing_amount) from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where s.code like ? group by s.title","%"+session[:code].to_s+"%"]
+		  #烤房状态
+		  @packing_rooms = Packing.find_by_sql ['select COUNT(*) as sum from (select distinct r.station_id,r.room_no from  tasks t left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id WHERE s.code like ? order by r.room_no )a;',"%"+session[:code].to_s+"%"]
+
 		  @by_category = Packing.find_by_sql ["select category,SUM(p.packing_amount) as packing_sum from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where s.code like ? group by p.category","%"+session[:code].to_s+"%"]
 		  @by_uniformity = Packing.find_by_sql ["select p.uniformity,SUM(p.packing_amount) from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where s.code like ? group by p.uniformity","%"+session[:code].to_s+"%"]
 		  @by_packing_type = Packing.find_by_sql ["select p.packing_type,SUM(p.packing_amount) from packings p left join tasks t on t.id = p.task_id left join rooms r on t.room_id = r.id left join stations s on s.id = r.station_id left join counties c on c.id = s.county_id where s.code like ? group by p.packing_type","%"+session[:code].to_s+"%"]
@@ -100,7 +106,8 @@ class PackingsController < ApplicationController
 		    	                         by_type_counties: @by_type_counties,
 		    	                         by_status_counties: @by_status_counties,
 		    	                         by_uniformity_counties: @by_uniformity_counties,
-		    	                         counties_code:@counties_code }}
+		    	                         counties_code:@counties_code,
+		    	                         packing_rooms:@packing_rooms  }}
 		  end
 	  end
 	end

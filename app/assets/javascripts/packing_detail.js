@@ -157,7 +157,7 @@
 					status.push(map);
 				}
 			}
-			
+
 			//初始化表格数据
 			for(var j=0;j<tTrolleys_data.length;j++){
 				for(var i=0;i<data.by_category_counties.length;i++){
@@ -1008,11 +1008,16 @@ function initChart(packing_weight, packing_sum, packing_rooms, packing_category,
         },
         credits: { enabled: false},
         xAxis: {
-            categories: ['装烟量','杆数']  //指定x轴分组
+            categories: ['装烟量','杆数','装烟房数']  //指定x轴分组
         },
         yAxis: {
             title: {
                 text: ''  //指定y轴的标题
+            },
+            labels: {
+             	formatter:function(){
+                	return '';
+             	}
             }
         },
         legend: {
