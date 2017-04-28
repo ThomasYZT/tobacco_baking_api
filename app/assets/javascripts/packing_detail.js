@@ -30,17 +30,29 @@
 			console.log(data);
 			var packing_weight = 0;
 			var packing_sum = 0;
+			var packing_rooms = 0;
 			var packing_category = [];
 			var packing_type = [];
 			var uniformity = [];
 			var status = [];
 			var tTrolleys_data = [];
+			/*
+			 * 装烟量
+			 */
 			for(var i=0;i<data.packing_weight.length;i++){
 				packing_weight = parseFloat(data.packing_weight[i].sum);
 			}
+
+			/*
+			 * 编烟竿数
+			 */
 			for(var i=0;i<data.packing_sum.length;i++){
 				packing_sum = parseFloat(data.packing_sum[i].sum);
 			}
+			/*
+			 * 装烟房数
+			 */
+			packing_rooms = data.packing_rooms[0].sum;
 
 			for(var i=0;i<data.packing_weight_by_counties.length;i++){
 				var map = {};
@@ -50,39 +62,87 @@
 				tTrolleys_data.push(map);
 			}
 
-			for(var i=0;i<data.by_category.length;i++){
-				var map = {};
-				map.name = data.by_category[i].category;
-				map.y = data.by_category[i].packing_sum;
-				packing_category.push(map);
+			/*
+			 * 分类编烟统计
+			 */
+			map = {};
+			map.name = $.trim(data.by_category[0].category);
+			map.y = parseInt(data.by_category[0].packing_sum);
+			packing_category.push(map);
+			for(var i=1;i<data.by_category.length;i++){
+				has_same = false;
+				_x = null;
+				for(var j=0; j<packing_category.length; j++){
+					if($.trim(packing_category[j].name) == $.trim(data.by_category[i].category)){
+						has_same = true;
+						_x = j;
+					}
+				}
+				if(has_same){
+					packing_category[_x].y += parseInt(data.by_category[i].packing_sum);
+				}else {
+					map = {};
+					map.name = $.trim(data.by_category[i].category);
+					map.y = parseInt(data.by_category[i].packing_sum);
+					packing_category.push(map);
+				}
 			}
 			packing_category[0].sliced = true;
 			packing_category[0].selected = true;
 
+			/*
+			 * 竿夹内均匀性统计
+			 */
+			packing_type.push({
+				name: "均匀",
+				y: 0
+			});
+			packing_type.push({
+				name: "不均匀",
+				y: 0,
+				sliced: true,
+				selected: true
+			})
 			for(var i=0;i<data.by_packing_type.length;i++){
 				var map = {};
 				if($.trim(data.by_packing_type[i].packing_type) == "各竿/夹量基本一致"){
-					map.name = "各竿/夹量基本一致";
-					map.y = data.by_packing_type[i].sum;
-					packing_type.push(map);
+					packing_type[0].y += data.by_packing_type[i].sum;
 				} else if($.trim(data.by_packing_type[i].packing_type) == "各竿/夹量不一致") {
-					map.name = "各竿/夹量不一致";
-					map.y = data.by_packing_type[i].sum;
-					map.sliced = true;
-					map.selected = true;
-					packing_type.push(map);
+					packing_type[1].y += data.by_packing_type[i].sum;
 				}
 			}
 
-			for(var i=0;i<data.by_uniformity.length;i++){
-				var map = {};
-				map.name = data.by_uniformity[i].uniformity;
-				map.y = data.by_uniformity[i].sum;
-				uniformity.push(map);
+			/*
+			 * 装烟均匀性统计
+			 */
+			map = {};
+			map.name = $.trim(data.by_uniformity[0].uniformity);
+			map.y = parseInt(data.by_uniformity[0].sum);
+			uniformity.push(map);
+			for(var i=1;i<data.by_uniformity.length;i++){
+				has_same = false;
+				_x = null;
+				for(var j=0; j<uniformity.length; j++){
+					if($.trim(uniformity[j].name) == $.trim(data.by_uniformity[i].uniformity)){
+						has_same = true;
+						_x = j;
+					}
+				}
+				if(has_same){
+					uniformity[_x].y += parseInt(data.by_uniformity[i].sum);
+				}else {
+					map = {};
+					map.name = $.trim(data.by_uniformity[i].uniformity);
+					map.y = parseInt(data.by_uniformity[i].sum);
+					uniformity.push(map);
+				}
 			}
 			uniformity[0].sliced = true;
 			uniformity[0].selected = true;
 			
+			/*
+			 * 分类装烟情况
+			 */
 			for(var i=0;i<data.by_status.length;i++){
 				var map = {};
 				if(data.by_status[i].status == "f"){
@@ -97,6 +157,7 @@
 					status.push(map);
 				}
 			}
+			
 			//初始化表格数据
 			for(var j=0;j<tTrolleys_data.length;j++){
 				for(var i=0;i<data.by_category_counties.length;i++){
@@ -149,7 +210,7 @@
 			}
 			console.log(tTrolleys_data)
 
-			initChart(packing_weight, packing_sum, packing_category, packing_type, uniformity, status);
+			initChart(packing_weight, packing_sum, packing_rooms, packing_category, packing_type, uniformity, status);
 			initTable(tTrolleys_data);
 
 
@@ -936,7 +997,7 @@ function initTable(tTrolleys_data){
 			});
 }
 
-function initChart(packing_weight, packing_sum, packing_category, packing_type, uniformity, status){
+function initChart(packing_weight, packing_sum, packing_rooms, packing_category, packing_type, uniformity, status){
 	
 	$('#container').highcharts({  //图表展示容器，与div的id保持一致
         chart: {
@@ -967,7 +1028,7 @@ function initChart(packing_weight, packing_sum, packing_category, packing_type, 
             	y:packing_sum
             },{
             	name:'装烟房数(房)',
-            	y:packing_sum
+            	y:packing_rooms
             }] 
         }]
     });

@@ -325,60 +325,26 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
-				var analysis_data = [];
-				var map = {};
-				map.room_no = data.part[0].room_no;
-				map.top = 0;
-				map.middle = 0;
-				map.down = 0;
-				if($.trim(data.part[0].part) == "上部叶"){
-					map.top = data.part[0].sum;
-				}else if($.trim(data.part[0].part) == "中部叶"){
-					map.middle = data.part[0].sum;
-				}else if($.trim(data.part[0].part) == "下部叶"){
-					map.down = data.part[0].sum;
-				}
-				analysis_data.push(map);
+
+				var part_data = [[data.part[0]]];
 				for(var i=1; i<data.part.length; i++){
-					var status = false;
-					var _x = null;
-					for(var j=0; j<analysis_data.length; j++){
-						if(data.part[i].room_no == analysis_data[j].room_no){
-							status = true;
-							_x = j;
-						}
-					}
-					if(status){
-						if($.trim(data.part[i].part) == "上部叶"){
-							analysis_data[_x].top += data.part[i].sum;
-						}else if($.trim(data.part[i].part) == "中部叶"){
-							analysis_data[_x].middle += data.part[i].sum;
-						}else if($.trim(data.part[i].part) == "下部叶"){
-							analysis_data[_x].down += data.part[i].sum;
-						}
+					if(data.part[i].room_no == part_data[part_data.length-1][part_data[part_data.length-1].length-1].room_no){
+						part_data[part_data.length-1].push(data.part[i]);
 					}else{
-						var map = {};
-						map.room_no = data.part[i].room_no;
-						map.top = 0;
-						map.middle = 0;
-						map.down = 0;
-						if($.trim(data.part[i].part) == "上部叶"){
-							map.top = data.part[i].sum;
-						}else if($.trim(data.part[i].part) == "中部叶"){
-							map.middle = data.part[i].sum;
-						}else if($.trim(data.part[i].part) == "下部叶"){
-							map.down = data.part[i].sum;
-						}
-						analysis_data.push(map);
+						part_data.push([data.part[i]])
 					}
 				}
-				console.log(analysis_data)
+
+				
+
+				console.log(part_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">上部叶</th><th colspan="2">中部叶</th><th colspan="2">下部叶</th></tr><tr><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="3">烤房编号</th><th colspan="6">第一烤</th><th colspan="6">第二烤</th><th colspan="6">第三烤</th><th colspan="6">第四烤</th><th colspan="6">第五烤</th><th colspan="6">第六烤</th></tr><tr><th colspan="2">上部叶</th><th colspan="2">中部叶</th><th colspan="2">下部叶</th><th colspan="2">上部叶</th><th colspan="2">中部叶</th><th colspan="2">下部叶</th><th colspan="2">上部叶</th><th colspan="2">中部叶</th><th colspan="2">下部叶</th><th colspan="2">上部叶</th><th colspan="2">中部叶</th><th colspan="2">下部叶</th><th colspan="2">上部叶</th><th colspan="2">中部叶</th><th colspan="2">下部叶</th><th colspan="2">上部叶</th><th colspan="2">中部叶</th><th colspan="2">下部叶</th></tr><tr><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th><th>重量</th><th>占比</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
 			      searching: false,//搜索
+			      scrollX: true,
 			      language: {
 			        search: '',//右上角的搜索文本，可以写html标签
 			        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
@@ -387,34 +353,407 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:analysis_data,
+			      data:part_data,
 			      columns:[
-			        {data:'room_no'},
-			        {data:'top',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	return data[0].room_no;
 			        }},
-			        {data:'top',render:function(data,type,full){
-			        	var sum = full.top+full.middle+full.down;
-			        	console.log(sum)
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].part) != "上部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'middle',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].part) != "上部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'middle',render:function(data,type,full){
-			        	var sum = full.top+full.middle+full.down;
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].part) != "中部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'down',render:function(data){
-			        	return data.toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].part) != "中部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
 			        }},
-			        {data:'down',render:function(data,type,full){
-			        	var sum = full.top+full.middle+full.down;
-			        	var p = (data/sum*100).toFixed(2);
-			        	return p+'%';
-			        }}    
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].part) != "下部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[0].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		if($.trim(data[0].part) != "下部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].part) != "上部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].part) != "上部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].part) != "中部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].part) != "中部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].part) != "下部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[1].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		if($.trim(data[1].part) != "下部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].part) != "上部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].part) != "上部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].part) != "中部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].part) != "中部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].part) != "下部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[2].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		if($.trim(data[2].part) != "下部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].part) != "上部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].part) != "上部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].part) != "中部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].part) != "中部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].part) != "下部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[3].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		if($.trim(data[3].part) != "下部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].part) != "上部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].part) != "上部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].part) != "中部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].part) != "中部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].part) != "下部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[4].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		if($.trim(data[4].part) != "下部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].part) != "上部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].part) != "上部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].part) != "中部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].part) != "中部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].part) != "下部叶"){
+				        		return 0;
+				        	}else{
+				        		return data[5].sum;
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		if($.trim(data[5].part) != "下部叶"){
+				        		return '0.00%';
+				        	}else{
+				        		return '100%';
+				        	}
+			        	}else{
+			        		return "";
+			        	}
+			        }},    
 			      ]
 				});
 			}

@@ -170,6 +170,30 @@
                         }
                         dataPoints.push(combustion_fan_status_line);
 
+                        //标准干球温度曲线
+                        var standard_dry_line = {
+                            type: "spline",
+                            visible: false,
+                            showInLegend: true,
+                            name: "标准干球温度",
+                            lineThickness: 1,
+                            markerSize: 1,
+                            dataPoints: []
+                        }
+                        dataPoints.push(standard_dry_line);
+
+                        //标准湿球温度曲线
+                        var standard_wet_line = {
+                            type: "spline",
+                            visible: false,
+                            showInLegend: true,
+                            name: "标准湿球温度",
+                            lineThickness: 1,
+                            markerSize: 1,
+                            dataPoints: []
+                        }
+                        dataPoints.push(standard_wet_line);
+
                         for (var i = 0; i < data.length; i ++) {
                             /*
                              * 解析数据
@@ -180,6 +204,8 @@
                             var normal = ss.split(",");
                             var wetball = (parseFloat(alarm[6]) * 256 + parseFloat(alarm[7])) / 10;
                             var dryball = (parseFloat(alarm[4]) * 256 + parseFloat(alarm[5])) / 10;
+                            var standard_dryball = (parseFloat(normal[0]) * 256 + parseFloat(normal[1])) / 10;
+                            var standard_wetball = (parseFloat(normal[2]) * 256 + parseFloat(normal[3])) / 10;
                             var wind_door_status = getBits(normal[10], 0);
                             var combustion_fan_status = getBits(normal[10], 2);
                             var high_speed = getBits(normal[10], 6);
@@ -201,6 +227,9 @@
                                 dataPoints[3].dataPoints.push({x: new Date(createdAt),y: low_speed});
                                 dataPoints[4].dataPoints.push({x: new Date(createdAt),y: wind_door_status});
                                 dataPoints[5].dataPoints.push({x: new Date(createdAt),y: combustion_fan_status});
+
+                                dataPoints[6].dataPoints.push({x: new Date(createdAt),y: standard_dryball});
+                                dataPoints[7].dataPoints.push({x: new Date(createdAt),y: standard_wetball});
                             }
                             if (createdAt-lastdate>30000){
                                 lastdate=createdAt;
@@ -210,6 +239,9 @@
                                 dataPoints[3].dataPoints.push({x: new Date(createdAt),y: low_speed});
                                 dataPoints[4].dataPoints.push({x: new Date(createdAt),y: wind_door_status});
                                 dataPoints[5].dataPoints.push({x: new Date(createdAt),y: combustion_fan_status});
+
+                                dataPoints[6].dataPoints.push({x: new Date(createdAt),y: standard_dryball});
+                                dataPoints[7].dataPoints.push({x: new Date(createdAt),y: standard_wetball});
                             }
                         } 
                         console.log(dataPoints);

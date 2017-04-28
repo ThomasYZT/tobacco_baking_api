@@ -18,6 +18,7 @@
 			 */
 			var packing_weight = 0;  //装烟量
 			var packing_sum = 0;  //编烟竿数
+			var packing_rooms = 0;
 			var packing_category = [];  //分类编烟统计
 			var packing_type = [];  //竿夹内均匀性统计
 			var status = [];  //分类装烟情况
@@ -77,18 +78,22 @@
 			/*
 			 * 竿夹内均匀性统计
 			 */
+			packing_type.push({
+				name: "均匀",
+				y: 0
+			});
+			packing_type.push({
+				name: "不均匀",
+				y: 0,
+				sliced: true,
+				selected: true
+			})
 			for(var i=0;i<data.by_packing_type.length;i++){
 				var map = {};
 				if($.trim(data.by_packing_type[i].packing_type) == "各竿/夹量基本一致"){
-					map.name = "正确";
-					map.y = parseInt(data.by_packing_type[i].sum);
-					packing_type.push(map);
+					packing_type[0].y += data.by_packing_type[i].sum;
 				} else if($.trim(data.by_packing_type[i].packing_type) == "各竿/夹量不一致") {
-					map.name = "不正确";
-					map.y = parseInt(data.by_packing_type[i].sum);
-					map.sliced = true;
-					map.selected = true;
-					packing_type.push(map);
+					packing_type[1].y += data.by_packing_type[i].sum;
 				}
 			}
 
@@ -199,7 +204,7 @@
 					}
 				}
 			}
-			initChart(packing_weight, packing_sum, packing_category, packing_type, uniformity, status);
+			initChart(packing_weight, packing_rooms, packing_sum, packing_category, packing_type, uniformity, status);
 			initTable(tTrolleys_data);
 		}
 	})
@@ -294,7 +299,7 @@ function initTable(tTrolleys_data){
 	});
 }
 
-function initChart(packing_weight, packing_sum, packing_category, packing_type, uniformity, status){
+function initChart(packing_weight, packing_rooms, packing_sum, packing_category, packing_type, uniformity, status){
 	
 	$('#container').highcharts({  //图表展示容器，与div的id保持一致
         chart: {
