@@ -318,7 +318,7 @@ function initChart(packing_weight, packing_rooms, packing_sum, packing_category,
             },
             labels: {
              	formatter:function(){
-                	//return this.value/1000+'t';
+                	//return this.value+'t';
                 	return '';
              	}
             }

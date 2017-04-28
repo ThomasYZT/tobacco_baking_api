@@ -783,7 +783,7 @@ function room_analysis(e,room_no,detail_code){
 				}
 				console.log(analysis_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">各竿/夹量基本一致</th><th colspan="2">各竿/夹量不一致</th></tr><tr><th>总重</th><th>占比</th><th>总重</th><th>占比</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">均匀</th><th colspan="2">不均匀</th></tr><tr><th>总重</th><th>占比</th><th>总重</th><th>占比</th></tr></thead></table></div>');
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
