@@ -296,9 +296,10 @@
                             },
                             data: dataPoints,
                             legend: {
+                                verticalAlign: "bottom",
                                 cursor:"pointer",
                                 fontSize: 14,
-                                dockInsidePlotArea: true,
+                                dockInsidePlotArea: false,
                                 itemclick:function(e){
                                     var count = 0;
                                     for(var i=0;i<6;i++){
