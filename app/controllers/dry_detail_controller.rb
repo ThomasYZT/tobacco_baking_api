@@ -71,13 +71,13 @@ class DryDetailController < ApplicationController
 				end
 			elsif params[:type] == "quality"
 				if params[:room_no] == "0"
-					@quality = DryTobacco.find_by_sql ['select r.room_no,sum(dd.weight_zz)/sum(amount_weight) * sum(d.weight * p.packing_amount)/3 as zz,sum(dd.weight_wq)/sum(amount_weight) * sum(d.weight * p.packing_amount)/3 as wq,sum(dd.weight_q)/sum(amount_weight) *sum(d.weight * p.packing_amount)/3 as q,sum(dd.weight_zs)/sum(amount_weight) *sum(d.weight * p.packing_amount)/3 as zs from dry_details dd left join dry_tobaccos d on d.id = dd.dry_tobacco_id left join packings p on p.task_id = d.task_id left join tasks t on t.id = d.task_id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? group by r.room_no order by cast(r.room_no as int)',params[:station_code]]
+					@quality = DryTobacco.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,sum(dd.weight_zz)/sum(amount_weight) * sum(d.weight * p.packing_amount)/3 as zz,sum(dd.weight_wq)/sum(amount_weight) * sum(d.weight * p.packing_amount)/3 as wq,sum(dd.weight_q)/sum(amount_weight) *sum(d.weight * p.packing_amount)/3 as q,sum(dd.weight_zs)/sum(amount_weight) *sum(d.weight * p.packing_amount)/3 as zs from dry_details dd left join dry_tobaccos d on d.id = dd.dry_tobacco_id left join packings p on p.task_id = d.task_id left join tasks t on t.id = d.task_id left join contracts c on c.task_id = t.id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id  where s.code = ? group by r.room_no,c.party_b,c.work_started,c.work_finished order by cast(r.room_no as int),c.work_started',params[:station_code]]
 					respond_to do |format|
 					   format.html
 					   format.json { render json:{ quality: @quality }}
 					end
 				else
-					@quality = DryTobacco.find_by_sql ['select r.room_no,sum(dd.weight_zz)/sum(amount_weight) * sum(d.weight * p.packing_amount)/3 as zz,sum(dd.weight_wq)/sum(amount_weight) * sum(d.weight * p.packing_amount)/3 as wq,sum(dd.weight_q)/sum(amount_weight) *sum(d.weight * p.packing_amount)/3 as q,sum(dd.weight_zs)/sum(amount_weight) *sum(d.weight * p.packing_amount)/3 as zs from dry_details dd left join dry_tobaccos d on d.id = dd.dry_tobacco_id left join packings p on p.task_id = d.task_id left join tasks t on t.id = d.task_id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? and r.room_no = ? group by r.room_no order by cast(r.room_no as int)',params[:station_code],params[:room_no]]
+					@quality = DryTobacco.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,sum(dd.weight_zz)/sum(amount_weight) * sum(d.weight * p.packing_amount)/3 as zz,sum(dd.weight_wq)/sum(amount_weight) * sum(d.weight * p.packing_amount)/3 as wq,sum(dd.weight_q)/sum(amount_weight) *sum(d.weight * p.packing_amount)/3 as q,sum(dd.weight_zs)/sum(amount_weight) *sum(d.weight * p.packing_amount)/3 as zs from dry_details dd left join dry_tobaccos d on d.id = dd.dry_tobacco_id left join packings p on p.task_id = d.task_id left join tasks t on t.id = d.task_id left join contracts c on c.task_id = t.id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id  where s.code = ? and room_no = ? group by r.room_no,c.party_b,c.work_started,c.work_finished order by cast(r.room_no as int),c.work_started',params[:station_code],params[:room_no]]
 					respond_to do |format|
 					   format.html
 					   format.json { render json:{ quality: @quality }}
@@ -85,7 +85,7 @@ class DryDetailController < ApplicationController
 				end
 			elsif params[:type] == "breed"
 				if params[:room_no] == "0"
-					@breed = DryTobacco.find_by_sql ['select r.room_no,f.breed,sum(d.weight * p.packing_amount) as sum from dry_tobaccos d left join packings p on p.task_id = d.task_id left join fresh_tobaccos f on f.task_id = d.task_id left join tasks t on t.id = d.task_id left join rooms r on r.id = t.room_id left join stations s on s.id = r.station_id where s.code = ? group by r.room_no,f.breed order by cast(r.room_no as int)',params[:station_code]]
+					@breed = DryTobacco.find_by_sql ['select r.room_no,c.party_b,c.work_started,c.work_finished,f.breed,sum(d.weight * p.packing_amount) as sum from dry_tobaccos d left join packings p on p.task_id = d.task_id left join fresh_tobaccos f on f.task_id = d.task_id left join tasks t on t.id = d.task_id left join rooms r on r.id = t.room_id left join contracts c on c.task_id = t.id left join stations s on s.id = r.station_id where s.code = ? group by r.room_no,f.breed,c.party_b,c.work_started,c.work_finished order by cast(r.room_no as int),c.work_started',params[:station_code]]
 					respond_to do |format|
 					   format.html
 					   format.json { render json:{ breed: @breed }}

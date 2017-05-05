@@ -310,7 +310,7 @@ function initChart(packing_weight, packing_rooms, packing_sum, packing_category,
         },
         credits: { enabled: false},
         xAxis: {
-            categories: ['鲜烟量','编烟杆数','装烟房数']  //指定x轴分组
+            categories: ['鲜烟量','编烟杆数']  //指定x轴分组
         },
         yAxis: {
             title: {
@@ -334,7 +334,38 @@ function initChart(packing_weight, packing_rooms, packing_sum, packing_category,
             },{
             	name:'编烟杆数(杆)',
             	y:parseInt(packing_sum)
-            },{
+            }] 
+        }]
+    });
+
+    $('#container_room').highcharts({  //图表展示容器，与div的id保持一致
+        chart: {
+            type: 'column'  //指定图表的类型，默认是折线图（line）
+        },
+        title: {
+            text: ''  //指定图表标题
+        },
+        credits: { enabled: false},
+        xAxis: {
+            categories: ['装烟房数']  //指定x轴分组
+        },
+        yAxis: {
+            title: {
+                text: ''  //指定y轴的标题
+            },
+            labels: {
+             	formatter:function(){
+                	//return this.value+'t';
+                	return '';
+             	}
+            }
+        },
+        legend: {
+        	enabled:false
+        },
+        series: [{  //指定数据列
+        	name:'统计',
+            data: [{
             	name:'装烟房数(房)',
             	y:parseInt(packing_rooms)
             }] 
@@ -360,7 +391,7 @@ function initChart(packing_weight, packing_rooms, packing_sum, packing_category,
 
 	$('#container3').highcharts({
             title: {
-                text: '竿/夹内均匀性统计(杆)'
+                text: '竿/夹内均<br/>匀性统计(杆)'
             },
             credits: { enabled: false},
             tooltip: {

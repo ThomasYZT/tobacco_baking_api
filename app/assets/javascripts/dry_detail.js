@@ -768,12 +768,24 @@ function room_analysis(e,room_no,detail_code){
 			success:function(data){
 				console.log(data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>正组</th><th>青烟</th><th>杂色</th><th>不列级</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="3">烤房编号</th><th colspan="4">第一烤</th><th colspan="4">第二烤</th><th colspan="4">第三烤</th><th colspan="4">第四烤</th><th colspan="4">第五烤</th><th colspan="4">第六烤</th></tr><tr><th colspan="1">正组</th><th colspan="1">青烟</th><th colspan="1">杂色</th><th colspan="1">不列级</th><th colspan="1">正组</th><th colspan="1">青烟</th><th colspan="1">杂色</th><th colspan="1">不列级</th><th colspan="1">正组</th><th colspan="1">青烟</th><th colspan="1">杂色</th><th colspan="1">不列级</th><th colspan="1">正组</th><th colspan="1">青烟</th><th colspan="1">杂色</th><th colspan="1">不列级</th><th colspan="1">正组</th><th colspan="1">青烟</th><th colspan="1">杂色</th><th colspan="1">不列级</th><th colspan="1">正组</th><th colspan="1">青烟</th><th colspan="1">杂色</th><th colspan="1">不列级</th></tr><tr><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th><th>重量</th></tr></thead></table></div>');
+				var quality_data = [[data.quality[0]]];
+				for(var i=1; i<data.quality.length; i++){
+					if(data.quality[i].room_no == quality_data[quality_data.length-1][quality_data[quality_data.length-1].length-1].room_no){
+						quality_data[quality_data.length-1].push(data.quality[i]);
+					}else{
+						quality_data.push([data.quality[i]])
+					}
+				}
+
+
+
+				console.log(quality_data);
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
 			      searching: false,//搜索
+			      scrollX: true,
 			      language: {
 			        search: '',//右上角的搜索文本，可以写html标签
 			        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
@@ -782,21 +794,179 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:data.quality,
+			      data:quality_data,
 			      columns:[
-			        {data:'room_no'},
-			        {data:'zz',render:function(data){
-			        	return parseFloat(data).toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	return data[0].room_no;
 			        }},
-			        {data:'q',render:function(data){
-			        	return parseFloat(data).toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return parseFloat(data[0].zz).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
 			        }},
-			        {data:'zs',render:function(data){
-			        	return parseFloat(data).toFixed(2);
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return parseFloat(data[0].q).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
 			        }},
-			        {data:'wq',render:function(data){
-			        	return parseFloat(data).toFixed(2);
-			        }}        
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return parseFloat(data[0].zs).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[0]){
+			        		return parseFloat(data[0].wq).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return parseFloat(data[1].zz).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return parseFloat(data[1].q).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return parseFloat(data[1].zs).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[1]){
+			        		return parseFloat(data[1].wq).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return parseFloat(data[2].zz).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return parseFloat(data[2].q).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return parseFloat(data[2].zs).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[2]){
+			        		return parseFloat(data[2].wq).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return parseFloat(data[3].zz).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return parseFloat(data[3].q).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return parseFloat(data[3].zs).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[3]){
+			        		return parseFloat(data[3].wq).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return parseFloat(data[4].zz).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return parseFloat(data[4].q).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return parseFloat(data[4].zs).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[4]){
+			        		return parseFloat(data[4].wq).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return parseFloat(data[5].zz).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return parseFloat(data[5].q).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return parseFloat(data[5].zs).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }},
+			        {data:'[]',sWidth:"40px",render:function(data,index,row){
+			        	if(data[5]){
+			        		return parseFloat(data[5].wq).toFixed(2);
+			        	}else{
+			        		return " ";
+			        	}
+			        }}    
 			      ]
 				});
 			}
@@ -810,14 +980,27 @@ function room_analysis(e,room_no,detail_code){
 			data:data,
 			success:function(data){
 				console.log(data);
+
+				var breed_data = [[data.breed[0]]];
+				for(var i=1; i<data.breed.length; i++){
+					if(data.breed[i].room_no == breed_data[breed_data.length-1][breed_data[breed_data.length-1].length-1].room_no){
+						breed_data[breed_data.length-1].push(data.breed[i]);
+					}else{
+						breed_data.push([data.breed[i]])
+					}
+				}
+
+
+
+				console.log(breed_data);
 				$("#room_details").remove();
-				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr>'+
-                      									'<th>烤房编号</th><th>品种</th><th>重量</th></tr></thead></table></div>');
+				$(".room_row").find(".box-body").append('<div class="col-md-12" id="room_details"><table class="table table-striped table-hover" id="room_analysis"><thead><tr><th rowspan="2">烤房编号</th><th colspan="2">第一烤</th><th colspan="2">第二烤</th><th colspan="2">第三烤</th><th colspan="2">第四烤</th><th colspan="2">第五烤</th><th colspan="2">第六烤</th></tr><tr><th>品种</th><th>重量</th><th>品种</th><th>重量</th><th>品种</th><th>重量</th><th>品种</th><th>重量</th><th>品种</th><th>重量</th><th>品种</th><th>重量</th></tr></thead></table></div>');
 				
 				$("#room_analysis").DataTable({
 				  paging: true,//分页
 			      ordering: true,//是否启用排序
 			      searching: false,//搜索
+			      scrollX: true,
 			      language: {
 			        search: '',//右上角的搜索文本，可以写html标签
 			        zeroRecords: "没有内容",//table tbody内容为空时，tbody的内容。
@@ -826,11 +1009,95 @@ function room_analysis(e,room_no,detail_code){
 			        infoEmpty: "",//筛选为空时左下角的显示。
 			        infoFiltered: ""//筛选之后的左下角筛选提示，
 			      },
-			      data:data.breed,
+			      data:breed_data,
 			      columns:[
-			        {data:'room_no'},
-			        {data:'breed'},
-			        {data:'sum'}        
+			        {data:'[]',render:function(data,index,row){
+			        	return data[0].room_no;
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[0]){
+				        	return data[0].breed;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[0]){
+				        	return data[0].sum;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[1]){
+				        	return data[1].breed;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[1]){
+				        	return data[1].sum;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[2]){
+				        	return data[2].breed;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[2]){
+				        	return data[2].sum;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[3]){
+				        	return data[3].breed;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[3]){
+				        	return data[3].sum;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[4]){
+				        	return data[4].breed;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[4]){
+				        	return data[4].sum;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[5]){
+				        	return data[5].breed;
+			        	}else{
+			        		return "";
+			        	}
+			        }},
+			        {data:'[]',render:function(data,index,row){
+			        	if(data[5]){
+				        	return data[5].sum;
+			        	}else{
+			        		return "";
+			        	}
+			        }} 
 			      ]
 				});
 			}

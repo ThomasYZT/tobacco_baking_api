@@ -48,7 +48,7 @@ function ajaxRequest(){
             }
             console.log(data)
             $("#yuefen").text(data.time[0]+"年");
-
+            $(".des").text("("+data.time[0]+"年1月1日 至 今日)");
             /*
              * 应用烤房
              */

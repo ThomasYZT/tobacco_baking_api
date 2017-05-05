@@ -14,11 +14,33 @@
         url: "/rooms",
         dataType: 'json',
         success: function(data) {
+            $("#stations").append("<option></option>")
             for (var i = 0; i < data.stations.length; i++) {
                 $("#stations").append("<option value='" + data.stations[i].id + "''>" + data.stations[i].title + "</option>")
             }
         }
     });
+
+    $("#stations").change(function(){
+        var station_id = $("#stations").val();
+        $("#addresses").empty();
+        var data = {
+            station_id:station_id
+        }
+        $.ajax({
+            type: "get",
+            url: '/rooms',
+            dataType: 'json',
+            data: data,
+            success: function(data){
+                console.log(data);
+                for(var i=0;i<data.rooms.length;i++){
+                    $("#addresses").append("<option value='" + data.rooms[i].address + "''>" + data.rooms[i].address + "</option>");
+                }
+            }
+        })
+        
+    })
 
     $("#search_btn").click(function() {
         //清楚上一次的元素
@@ -175,7 +197,7 @@
                             type: "spline",
                             visible: false,
                             showInLegend: true,
-                            name: "标准干球温度",
+                            name: "干球目标温度",
                             lineThickness: 1,
                             markerSize: 1,
                             dataPoints: []
@@ -187,7 +209,7 @@
                             type: "spline",
                             visible: false,
                             showInLegend: true,
-                            name: "标准湿球温度",
+                            name: "湿球目标温度",
                             lineThickness: 1,
                             markerSize: 1,
                             dataPoints: []

@@ -2,12 +2,20 @@ class RoomsController < ApplicationController
   layout "none", :only => [:list]  
 
 	def index
-		puts session[:code]
-		@stations = Station.find_by_sql ['select s.id,s.title from stations s where s.code like ?',"%"+session[:code].to_s+"%"]
+		if params[:station_id]
+			@rooms = Room.find_by_sql ['select address from rooms where station_id = ? order by address',params[:station_id]]
+			respond_to do |format|
+			    format.html
+			    format.json { render json: { rooms: @rooms }}
+			end
+		else	
+			puts session[:code]
+			@stations = Station.find_by_sql ['select s.id,s.title from stations s where s.code like ?',"%"+session[:code].to_s+"%"]
 
-		respond_to do |format|
-		    format.html
-		    format.json { render json: { stations: @stations }}
+			respond_to do |format|
+			    format.html
+			    format.json { render json: { stations: @stations }}
+			end
 		end
 	end
 
